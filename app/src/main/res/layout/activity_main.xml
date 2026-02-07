@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark">
+
+    <!-- SELECCION DE ARMA -->
+    <LinearLayout
+        android:id="@+id/layoutWeapons"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:text="ASTARLOA"
+            android:textColor="@color/orange"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnSable"
+            android:text="SABLE"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_orange"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/btnEspada"
+            android:text="ESPADA"
+            android:alpha="0.4"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_orange"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/btnFlorete"
+            android:text="FLORETE"
+            android:alpha="0.4"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_orange"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"/>
+    </LinearLayout>
+
+    <!-- SELECCION DE MODO -->
+    <LinearLayout
+        android:id="@+id/layoutMode"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:text="SABLE"
+            android:textColor="@color/orange"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="32dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnMarcador"
+            android:text="MARCADOR"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_orange"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/btnControl"
+            android:text="CONTROL"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_orange"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="24dp"/>
+
+        <Button
+            android:id="@+id/btnAtras"
+            android:text="ATRAS"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_red"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"/>
+    </LinearLayout>
+
+</FrameLayout>

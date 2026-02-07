@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/panel_surface"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <!-- IZQUIERDA -->
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/panel_surface_alt">
+
+            <TextView
+                android:id="@+id/scoreLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="monospace"
+                android:text="00"
+                android:textColor="@android:color/white"
+                android:textSize="140sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:shadowColor="#66000000"
+                android:shadowDx="0"
+                android:shadowDy="4"
+                android:shadowRadius="8"/>
+
+
+            <LinearLayout
+                android:id="@+id/cardsLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="16dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/cardLeftYellow"
+                    android:layout_width="32dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@color/yellow"
+                    android:visibility="gone" />
+
+                <View
+                    android:id="@+id/cardLeftRed"
+                    android:layout_width="32dp"
+                    android:layout_height="48dp"
+                    android:background="@color/red"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+
+        </FrameLayout>
+
+        <!-- DERECHA -->
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/white" />
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@drawable/panel_surface"
+            >
+
+            <TextView
+                android:id="@+id/scoreRight"
+                android:text="00"
+                android:textColor="@android:color/white"
+                android:fontFamily="monospace"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="140sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:shadowColor="#66000000"
+                android:shadowDx="0"
+                android:shadowDy="4"
+                android:shadowRadius="8"
+                />
+
+
+
+            <LinearLayout
+                android:id="@+id/cardsRight"
+                android:orientation="horizontal"
+                android:layout_gravity="bottom|start"
+                android:layout_margin="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/cardRightYellow"
+                    android:visibility="gone"
+                    android:background="@color/yellow"
+                    android:layout_width="32dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="10dp"/>
+
+                <View
+                    android:id="@+id/cardRightRed"
+                    android:layout_width="32dp"
+                    android:layout_height="48dp"
+                    android:background="@color/red"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </FrameLayout>
+
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/txtIp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="8dp"
+        android:background="@color/surface_1"
+        android:padding="6dp"
+        android:text="IP: 0.0.0.0"
+        android:textColor="@color/text_secondary"
+        android:textSize="12sp"
+        android:elevation="10dp"
+        android:clickable="true"
+        android:focusable="true"/>
+
+    <!-- OVERLAY DESCANSO -->
+    <include layout="@layout/overlay_rest"/>
+</FrameLayout>
