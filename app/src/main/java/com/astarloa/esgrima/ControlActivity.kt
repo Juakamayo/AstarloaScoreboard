@@ -1,6 +1,5 @@
 package com.astarloa.esgrima
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
@@ -9,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 class ControlActivity : AppCompatActivity() {
 
-    private val state = MatchState()
+    private var state = MatchState()
     private val client = TcpClient()
     private var connected = false
     private lateinit var stateManager: MatchStateManager
@@ -27,7 +26,6 @@ class ControlActivity : AppCompatActivity() {
     private lateinit var btnConnect: Button
     private lateinit var btnDisconnect: Button
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_control)
@@ -45,6 +43,11 @@ class ControlActivity : AppCompatActivity() {
 
         stateManager = MatchStateManager(this)
 
+        // Cargar estado guardado
+        state = stateManager.loadState()
+        updateScoreText()
+        updateCardButtons()
+
         // Cargar última IP usada
         val lastIp = stateManager.getLastIp()
         if (lastIp.isNotEmpty()) {
@@ -61,9 +64,14 @@ class ControlActivity : AppCompatActivity() {
                     btnConnect.visibility = View.GONE
                     btnDisconnect.visibility = View.VISIBLE
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
+                    // Enviar estado actual al marcador al conectarse
+                    client.sendState(state)
                 } else {
                     connected = false
                     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                    btnConnect.isEnabled = true
+                    btnConnect.text = "CONECTAR"
                 }
             }
         }
@@ -73,6 +81,7 @@ class ControlActivity : AppCompatActivity() {
                 connected = false
                 editIp.isEnabled = true
                 btnConnect.isEnabled = true
+                btnConnect.text = "CONECTAR"  // ← Restaurar texto correcto
                 btnConnect.visibility = View.VISIBLE
                 btnDisconnect.visibility = View.GONE
                 Toast.makeText(this, "Desconectado del marcador", Toast.LENGTH_SHORT).show()
@@ -176,12 +185,9 @@ class ControlActivity : AppCompatActivity() {
                 state.rightRed = false
 
                 updateScoreText()
+                updateCardButtons()
 
-                findViewById<Button>(R.id.btnLeftYellow).alpha = 0.4f
-                findViewById<Button>(R.id.btnRightYellow).alpha = 0.4f
-                findViewById<Button>(R.id.btnLeftRed).alpha = 0.4f
-                findViewById<Button>(R.id.btnRightRed).alpha = 0.4f
-
+                stateManager.saveState(state)
                 client.sendState(state)
             }
         }
@@ -264,8 +270,16 @@ class ControlActivity : AppCompatActivity() {
         txtScore.text = String.format("%02d - %02d", state.leftScore, state.rightScore)
     }
 
+    private fun updateCardButtons() {
+        findViewById<Button>(R.id.btnLeftYellow).alpha = if (state.leftYellow) 1f else 0.4f
+        findViewById<Button>(R.id.btnRightYellow).alpha = if (state.rightYellow) 1f else 0.4f
+        findViewById<Button>(R.id.btnLeftRed).alpha = if (state.leftRed) 1f else 0.4f
+        findViewById<Button>(R.id.btnRightRed).alpha = if (state.rightRed) 1f else 0.4f
+    }
+
     private fun updateAndSend() {
         updateScoreText()
+        stateManager.saveState(state)  // Guardar estado localmente
         client.sendState(state)
     }
 
