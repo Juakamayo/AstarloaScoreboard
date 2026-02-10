@@ -1,5 +1,6 @@
 package com.astarloa.esgrima
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
@@ -11,6 +12,7 @@ class ControlActivity : AppCompatActivity() {
     private val state = MatchState()
     private val client = TcpClient()
     private var connected = false
+    private lateinit var stateManager: MatchStateManager
 
     private var restTimer: CountDownTimer? = null
     private var remainingMs: Long = 60_000
@@ -23,13 +25,16 @@ class ControlActivity : AppCompatActivity() {
     private lateinit var btnResume: Button
     private lateinit var editIp: EditText
     private lateinit var btnConnect: Button
+    private lateinit var btnDisconnect: Button
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_control)
 
         editIp = findViewById(R.id.editIp)
         btnConnect = findViewById(R.id.btnConnect)
+        btnDisconnect = findViewById(R.id.btnDisconnect)
 
         txtScore = findViewById(R.id.txtScore)
         layoutNormal = findViewById(R.id.layoutNormal)
@@ -38,6 +43,14 @@ class ControlActivity : AppCompatActivity() {
         btnPause = findViewById(R.id.btnPause)
         btnResume = findViewById(R.id.btnResume)
 
+        stateManager = MatchStateManager(this)
+
+        // Cargar última IP usada
+        val lastIp = stateManager.getLastIp()
+        if (lastIp.isNotEmpty()) {
+            editIp.setText(lastIp)
+        }
+
         // Configurar callbacks del cliente
         client.onConnectionResult = { success, message ->
             runOnUiThread {
@@ -45,7 +58,8 @@ class ControlActivity : AppCompatActivity() {
                     connected = true
                     editIp.isEnabled = false
                     btnConnect.isEnabled = false
-                    btnConnect.text = "CONECTADO"
+                    btnConnect.visibility = View.GONE
+                    btnDisconnect.visibility = View.VISIBLE
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 } else {
                     connected = false
@@ -59,7 +73,8 @@ class ControlActivity : AppCompatActivity() {
                 connected = false
                 editIp.isEnabled = true
                 btnConnect.isEnabled = true
-                btnConnect.text = "CONECTAR"
+                btnConnect.visibility = View.VISIBLE
+                btnDisconnect.visibility = View.GONE
                 Toast.makeText(this, "Desconectado del marcador", Toast.LENGTH_SHORT).show()
             }
         }
@@ -75,7 +90,14 @@ class ControlActivity : AppCompatActivity() {
             btnConnect.text = "CONECTANDO..."
             Toast.makeText(this, "Conectando...", Toast.LENGTH_SHORT).show()
 
+            // Guardar IP para la próxima vez
+            stateManager.saveLastIp(ip)
+
             client.connect(ip)
+        }
+
+        btnDisconnect.setOnClickListener {
+            client.disconnect()
         }
 
         setupScoreButtons()

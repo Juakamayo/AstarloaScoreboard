@@ -13,6 +13,8 @@ import java.util.*
 class MarcadorActivity : AppCompatActivity() {
 
     private lateinit var server: TcpServer
+    private lateinit var stateManager: MatchStateManager
+    private var currentState = MatchState()
 
     private lateinit var scoreLeft: TextView
     private lateinit var scoreRight: TextView
@@ -46,11 +48,21 @@ class MarcadorActivity : AppCompatActivity() {
         restPausedText = findViewById(R.id.restPausedText)
         txtIp = findViewById(R.id.txtIp)
 
+        stateManager = MatchStateManager(this)
+
+        // Cargar estado guardado
+        currentState = stateManager.loadState()
+        updateUI(currentState)
+
         val localIp = getLocalIpAddress()
         txtIp.text = "IP: $localIp"
 
         server = TcpServer { state ->
-            runOnUiThread { updateUI(state) }
+            currentState = state
+            runOnUiThread {
+                updateUI(state)
+                stateManager.saveState(state)
+            }
         }
 
         // Configurar callbacks del servidor
