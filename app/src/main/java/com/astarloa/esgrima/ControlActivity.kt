@@ -21,13 +21,15 @@ class ControlActivity : AppCompatActivity() {
     private lateinit var restTimerText: TextView
     private lateinit var btnPause: Button
     private lateinit var btnResume: Button
+    private lateinit var editIp: EditText
+    private lateinit var btnConnect: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_control)
 
-        val editIp = findViewById<EditText>(R.id.editIp)
-        val btnConnect = findViewById<Button>(R.id.btnConnect)
+        editIp = findViewById(R.id.editIp)
+        btnConnect = findViewById(R.id.btnConnect)
 
         txtScore = findViewById(R.id.txtScore)
         layoutNormal = findViewById(R.id.layoutNormal)
@@ -36,12 +38,44 @@ class ControlActivity : AppCompatActivity() {
         btnPause = findViewById(R.id.btnPause)
         btnResume = findViewById(R.id.btnResume)
 
+        // Configurar callbacks del cliente
+        client.onConnectionResult = { success, message ->
+            runOnUiThread {
+                if (success) {
+                    connected = true
+                    editIp.isEnabled = false
+                    btnConnect.isEnabled = false
+                    btnConnect.text = "CONECTADO"
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                } else {
+                    connected = false
+                    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+        client.onDisconnected = {
+            runOnUiThread {
+                connected = false
+                editIp.isEnabled = true
+                btnConnect.isEnabled = true
+                btnConnect.text = "CONECTAR"
+                Toast.makeText(this, "Desconectado del marcador", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         btnConnect.setOnClickListener {
-            client.connect(editIp.text.toString())
-            connected = true
-            editIp.isEnabled = false
+            val ip = editIp.text.toString().trim()
+            if (ip.isEmpty()) {
+                Toast.makeText(this, "Ingresa una IP válida", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             btnConnect.isEnabled = false
-            Toast.makeText(this, "Conectado", Toast.LENGTH_SHORT).show()
+            btnConnect.text = "CONECTANDO..."
+            Toast.makeText(this, "Conectando...", Toast.LENGTH_SHORT).show()
+
+            client.connect(ip)
         }
 
         setupScoreButtons()
@@ -130,9 +164,6 @@ class ControlActivity : AppCompatActivity() {
             }
         }
 
-
-
-
         btnPause.setOnClickListener { pauseRest() }
         btnResume.setOnClickListener { resumeRest() }
 
@@ -168,6 +199,7 @@ class ControlActivity : AppCompatActivity() {
             }
         }.start()
     }
+
     private fun pauseRest() {
         restTimer?.cancel()
         state.restPaused = true
@@ -228,5 +260,11 @@ class ControlActivity : AppCompatActivity() {
         val m = sec / 60
         val s = sec % 60
         return String.format("%d:%02d", m, s)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        restTimer?.cancel()
+        client.disconnect()
     }
 }

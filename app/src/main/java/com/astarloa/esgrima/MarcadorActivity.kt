@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import java.net.Inet4Address
 import java.net.NetworkInterface
@@ -25,6 +26,8 @@ class MarcadorActivity : AppCompatActivity() {
     private lateinit var restPausedText: TextView
     private lateinit var txtIp: TextView
 
+    private var isClientConnected = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_marcador)
@@ -43,12 +46,39 @@ class MarcadorActivity : AppCompatActivity() {
         restPausedText = findViewById(R.id.restPausedText)
         txtIp = findViewById(R.id.txtIp)
 
-        txtIp.text = "IP: ${getLocalIpAddress()}"
+        val localIp = getLocalIpAddress()
+        txtIp.text = "IP: $localIp"
 
         server = TcpServer { state ->
             runOnUiThread { updateUI(state) }
         }
+
+        // Configurar callbacks del servidor
+        server.onClientConnected = {
+            runOnUiThread {
+                isClientConnected = true
+                Toast.makeText(this, "Control conectado", Toast.LENGTH_SHORT).show()
+                txtIp.setBackgroundColor(getColor(R.color.green))
+            }
+        }
+
+        server.onClientDisconnected = {
+            runOnUiThread {
+                isClientConnected = false
+                Toast.makeText(this, "Control desconectado", Toast.LENGTH_SHORT).show()
+                txtIp.setBackgroundColor(getColor(R.color.surface_1))
+            }
+        }
+
+        server.onError = { message ->
+            runOnUiThread {
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+            }
+        }
+
         server.start()
+
+        Toast.makeText(this, "Esperando conexión del control...", Toast.LENGTH_LONG).show()
     }
 
     private fun updateUI(state: MatchState) {
@@ -94,6 +124,6 @@ class MarcadorActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        server.stop() // 🔥 ESTO EVITA EL CRASH
+        server.stop()
     }
 }

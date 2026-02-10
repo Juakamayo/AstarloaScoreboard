@@ -1,5 +1,6 @@
 package com.astarloa.esgrima
 
+import android.util.Log
 import com.google.gson.Gson
 import java.io.PrintWriter
 import java.net.Socket
@@ -10,23 +11,73 @@ class TcpClient {
 
     private val gson = Gson()
     private val queue = LinkedBlockingQueue<String>()
-    private lateinit var writer: PrintWriter
+    private var writer: PrintWriter? = null
+    private var socket: Socket? = null
+    private var running = false
+
+    var onConnectionResult: ((Boolean, String) -> Unit)? = null
+    var onDisconnected: (() -> Unit)? = null
 
     fun connect(ip: String) {
         thread {
-            val socket = Socket(ip, 8888)
-            writer = PrintWriter(socket.getOutputStream(), true)
-
-            thread {
-                while (true) {
-                    val msg = queue.take()
-                    writer.println(msg)
+            try {
+                // Validar IP
+                if (ip.isBlank()) {
+                    onConnectionResult?.invoke(false, "La IP no puede estar vacía")
+                    return@thread
                 }
+
+                // Intentar conectar con timeout
+                socket = Socket()
+                socket?.connect(java.net.InetSocketAddress(ip, 8888), 5000)
+
+                writer = PrintWriter(socket?.getOutputStream(), true)
+                running = true
+
+                onConnectionResult?.invoke(true, "Conectado exitosamente")
+
+                // Thread para enviar mensajes
+                thread {
+                    try {
+                        while (running) {
+                            val msg = queue.take()
+                            writer?.println(msg)
+                        }
+                    } catch (e: Exception) {
+                        Log.e("TcpClient", "Error enviando mensaje: ${e.message}")
+                        disconnect()
+                    }
+                }
+
+            } catch (e: java.net.SocketTimeoutException) {
+                onConnectionResult?.invoke(false, "Tiempo de espera agotado. Verifica la IP.")
+            } catch (e: java.net.ConnectException) {
+                onConnectionResult?.invoke(false, "No se pudo conectar. Verifica que el marcador esté activo.")
+            } catch (e: java.net.UnknownHostException) {
+                onConnectionResult?.invoke(false, "IP inválida")
+            } catch (e: Exception) {
+                onConnectionResult?.invoke(false, "Error: ${e.message}")
+                Log.e("TcpClient", "Error de conexión", e)
             }
         }
     }
 
     fun sendState(state: MatchState) {
-        queue.offer(gson.toJson(state))
+        if (running && writer != null) {
+            queue.offer(gson.toJson(state))
+        }
     }
+
+    fun disconnect() {
+        running = false
+        try {
+            writer?.close()
+            socket?.close()
+        } catch (e: Exception) {
+            Log.e("TcpClient", "Error al desconectar", e)
+        }
+        onDisconnected?.invoke()
+    }
+
+    fun isConnected(): Boolean = running && socket?.isConnected == true
 }
