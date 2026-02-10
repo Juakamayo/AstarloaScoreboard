@@ -5,180 +5,194 @@
     android:layout_height="match_parent">
 
     <!-- ===================== PANTALLA NORMAL ===================== -->
-    <ScrollView
+    <LinearLayout
         android:id="@+id/layoutNormal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
 
+        <!-- CONEXION EN LA PARTE SUPERIOR -->
         <LinearLayout
-            android:padding="16dp"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp">
 
-            <!-- CONEXION -->
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <EditText
-                    android:id="@+id/editIp"
-                    android:hint="IP del Marcador"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="@color/text_hint"
-                    android:background="@drawable/bg_input"
-                    android:padding="12dp"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"/>
-
-                <Button
-                    android:id="@+id/btnConnect"
-                    android:text="CONECTAR"
-                    android:textColor="@android:color/white"
-                    android:background="@drawable/btn_orange"
-                    android:layout_marginStart="8dp"
-                    android:layout_width="120dp"
-                    android:layout_height="48dp"/>
-            </LinearLayout>
-
-            <!-- MARCADOR ACTUAL -->
-            <TextView
-                android:id="@+id/txtScore"
-                android:text="00 - 00"
+            <EditText
+                android:id="@+id/editIp"
+                android:hint="IP del Marcador"
                 android:textColor="@android:color/white"
-                android:textSize="36sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:layout_marginBottom="24dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:textColorHint="@color/text_hint"
+                android:background="@drawable/bg_input"
+                android:padding="12dp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:inputType="numberDecimal"
+                android:digits="0123456789."/>
 
-            <!-- CONTROLES -->
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <!-- LADO IZQUIERDO -->
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content">
-
-                    <Button
-                        android:id="@+id/btnLeftPlus"
-                        android:text="+ PUNTO"
-                        android:textColor="@android:color/white"
-                        android:background="@drawable/btn_green"
-                        android:layout_height="56dp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_width="match_parent"/>
-
-
-                    <Button
-                        android:id="@+id/btnLeftMinus"
-                        android:text="- PUNTO"
-                        android:textColor="@android:color/white"
-                        android:background="@drawable/btn_red"
-                        android:layout_height="56dp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_width="match_parent"/>
-
-                    <Button
-                        android:id="@+id/btnLeftYellow"
-                        android:text="AMARILLA"
-                        android:textColor="@android:color/black"
-                        android:background="@drawable/btn_yellow"
-                        android:alpha="0.4"
-                        android:layout_height="56dp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_width="match_parent"/>
-
-                    <Button
-                        android:id="@+id/btnLeftRed"
-                        android:text="ROJA"
-                        android:textColor="@android:color/white"
-                        android:background="@drawable/btn_red"
-                        android:alpha="0.4"
-                        android:layout_height="56dp"
-                        android:layout_width="match_parent"/>
-                </LinearLayout>
-
-                <Space
-                    android:layout_width="16dp"
-                    android:layout_height="wrap_content"/>
-
-                <!-- LADO DERECHO -->
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content">
-
-                    <Button
-                        android:id="@+id/btnRightPlus"
-                        android:text="+ PUNTO"
-                        android:textColor="@android:color/white"
-                        android:background="@drawable/btn_green"
-                        android:layout_height="56dp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_width="match_parent"/>
-
-                    <Button
-                        android:id="@+id/btnRightMinus"
-                        android:text="- PUNTO"
-                        android:textColor="@android:color/white"
-                        android:background="@drawable/btn_red"
-                        android:layout_height="56dp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_width="match_parent"/>
-
-                    <Button
-                        android:id="@+id/btnRightYellow"
-                        android:text="AMARILLA"
-                        android:textColor="@android:color/black"
-                        android:background="@drawable/btn_yellow"
-                        android:alpha="0.4"
-                        android:layout_height="56dp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_width="match_parent"/>
-
-                    <Button
-                        android:id="@+id/btnRightRed"
-                        android:text="ROJA"
-                        android:textColor="@android:color/white"
-                        android:background="@drawable/btn_red"
-                        android:alpha="0.4"
-                        android:layout_height="56dp"
-                        android:layout_width="match_parent"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- BOTONES INFERIORES -->
             <Button
-                android:id="@+id/btnRest"
-                android:text="1 MIN"
+                android:id="@+id/btnConnect"
+                android:text="CONECTAR"
                 android:textColor="@android:color/white"
                 android:background="@drawable/btn_orange"
-                android:layout_marginTop="24dp"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"/>
-
-            <Button
-                android:id="@+id/btnReset"
-                android:text="REINICIAR TODO"
-                android:textColor="@android:color/white"
-                android:background="@drawable/btn_red"
-                android:layout_marginTop="12dp"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"/>
-
+                android:layout_marginStart="8dp"
+                android:layout_width="120dp"
+                android:layout_height="48dp"/>
         </LinearLayout>
-    </ScrollView>
+
+        <!-- CONTENEDOR CENTRADO PARA EL RESTO -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <!-- MARCADOR ACTUAL -->
+                <TextView
+                    android:id="@+id/txtScore"
+                    android:text="00 - 00"
+                    android:textColor="@android:color/white"
+                    android:textSize="48sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="32dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="monospace"/>
+
+                <!-- CONTROLES -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp">
+
+                    <!-- LADO IZQUIERDO -->
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content">
+
+                        <Button
+                            android:id="@+id/btnLeftPlus"
+                            android:text="+ PUNTO"
+                            android:textColor="@android:color/white"
+                            android:background="@drawable/btn_green"
+                            android:layout_height="56dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_width="match_parent"/>
+
+
+                        <Button
+                            android:id="@+id/btnLeftMinus"
+                            android:text="- PUNTO"
+                            android:textColor="@android:color/white"
+                            android:background="@drawable/btn_red"
+                            android:layout_height="56dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_width="match_parent"/>
+
+                        <Button
+                            android:id="@+id/btnLeftYellow"
+                            android:text="AMARILLA"
+                            android:textColor="@android:color/black"
+                            android:background="@drawable/btn_yellow"
+                            android:alpha="0.4"
+                            android:layout_height="56dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_width="match_parent"/>
+
+                        <Button
+                            android:id="@+id/btnLeftRed"
+                            android:text="ROJA"
+                            android:textColor="@android:color/white"
+                            android:background="@drawable/btn_red"
+                            android:alpha="0.4"
+                            android:layout_height="56dp"
+                            android:layout_width="match_parent"/>
+                    </LinearLayout>
+
+                    <Space
+                        android:layout_width="16dp"
+                        android:layout_height="wrap_content"/>
+
+                    <!-- LADO DERECHO -->
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content">
+
+                        <Button
+                            android:id="@+id/btnRightPlus"
+                            android:text="+ PUNTO"
+                            android:textColor="@android:color/white"
+                            android:background="@drawable/btn_green"
+                            android:layout_height="56dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_width="match_parent"/>
+
+                        <Button
+                            android:id="@+id/btnRightMinus"
+                            android:text="- PUNTO"
+                            android:textColor="@android:color/white"
+                            android:background="@drawable/btn_red"
+                            android:layout_height="56dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_width="match_parent"/>
+
+                        <Button
+                            android:id="@+id/btnRightYellow"
+                            android:text="AMARILLA"
+                            android:textColor="@android:color/black"
+                            android:background="@drawable/btn_yellow"
+                            android:alpha="0.4"
+                            android:layout_height="56dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_width="match_parent"/>
+
+                        <Button
+                            android:id="@+id/btnRightRed"
+                            android:text="ROJA"
+                            android:textColor="@android:color/white"
+                            android:background="@drawable/btn_red"
+                            android:alpha="0.4"
+                            android:layout_height="56dp"
+                            android:layout_width="match_parent"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- BOTONES INFERIORES -->
+                <Button
+                    android:id="@+id/btnRest"
+                    android:text="1 MIN"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/btn_orange"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginBottom="12dp"/>
+
+                <Button
+                    android:id="@+id/btnReset"
+                    android:text="REINICIAR TODO"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/btn_red"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"/>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
 
     <!-- ===================== PANTALLA MINUTO ===================== -->
     <LinearLayout
