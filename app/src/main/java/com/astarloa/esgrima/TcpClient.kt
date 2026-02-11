@@ -19,6 +19,9 @@ class TcpClient {
     var onDisconnected: (() -> Unit)? = null
 
     fun connect(ip: String) {
+        // Cerrar conexión anterior si existe
+        disconnect()
+
         thread {
             try {
                 // Validar IP
@@ -29,6 +32,9 @@ class TcpClient {
 
                 // Intentar conectar con timeout
                 socket = Socket()
+                socket?.soTimeout = 10000  // Timeout de lectura de 10 segundos
+                socket?.tcpNoDelay = true   // Enviar datos inmediatamente
+                socket?.keepAlive = true    // Mantener conexión viva
                 socket?.connect(java.net.InetSocketAddress(ip, 8888), 5000)
 
                 writer = PrintWriter(socket?.getOutputStream(), true)
@@ -39,9 +45,10 @@ class TcpClient {
                 // Thread para enviar mensajes
                 thread {
                     try {
-                        while (running) {
+                        while (running && socket?.isConnected == true) {
                             val msg = queue.take()
                             writer?.println(msg)
+                            writer?.flush()  // Forzar envío inmediato
                         }
                     } catch (e: Exception) {
                         Log.e("TcpClient", "Error enviando mensaje: ${e.message}")

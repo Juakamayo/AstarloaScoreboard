@@ -23,31 +23,49 @@ class TcpServer(private val onStateReceived: (MatchState) -> Unit) {
         Thread {
             try {
                 serverSocket = ServerSocket(8888)
+                serverSocket?.reuseAddress = true  // ← IMPORTANTE: Permite reutilizar el puerto
                 Log.d("TcpServer", "Servidor iniciado en puerto 8888")
 
                 while (running) {
                     try {
-                        // Esperar conexión del cliente
+                        // Cerrar conexión anterior si existe
+                        try {
+                            clientSocket?.close()
+                        } catch (e: Exception) {
+                            // Ignorar errores al cerrar
+                        }
+
+                        // Esperar nueva conexión
                         clientSocket = serverSocket?.accept()
+                        clientSocket?.soTimeout = 30000  // Timeout de 30 segundos
+
                         Log.d("TcpServer", "Cliente conectado: ${clientSocket?.inetAddress?.hostAddress}")
                         onClientConnected?.invoke()
 
                         val reader = BufferedReader(InputStreamReader(clientSocket!!.getInputStream()))
 
-                        while (running) {
-                            val line = reader.readLine()
-
-                            if (line == null) {
-                                Log.d("TcpServer", "Cliente desconectado")
-                                onClientDisconnected?.invoke()
-                                break
-                            }
-
+                        while (running && clientSocket?.isConnected == true) {
                             try {
-                                val state = gson.fromJson(line, MatchState::class.java)
-                                onStateReceived(state)
+                                val line = reader.readLine()
+
+                                if (line == null) {
+                                    Log.d("TcpServer", "Cliente desconectado")
+                                    onClientDisconnected?.invoke()
+                                    break
+                                }
+
+                                try {
+                                    val state = gson.fromJson(line, MatchState::class.java)
+                                    onStateReceived(state)
+                                } catch (e: Exception) {
+                                    Log.e("TcpServer", "Error parseando JSON: ${e.message}")
+                                }
+                            } catch (e: java.net.SocketTimeoutException) {
+                                // Timeout normal, continuar esperando
+                                continue
                             } catch (e: Exception) {
-                                Log.e("TcpServer", "Error parseando JSON: ${e.message}")
+                                Log.e("TcpServer", "Error leyendo datos: ${e.message}")
+                                break
                             }
                         }
 
