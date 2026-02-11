@@ -1,0 +1,515 @@
+package com.astarloa.esgrima
+
+import android.app.AlertDialog
+import android.os.Bundle
+import android.os.CountDownTimer
+import android.view.View
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import kotlin.random.Random
+
+class ControlFloreteActivity : AppCompatActivity() {
+
+    private var state = MatchState()
+    private val client = TcpClient()
+    private var connected = false
+    private lateinit var stateManager: MatchStateManager
+
+    private var restTimer: CountDownTimer? = null
+    private var remainingRestMs: Long = 60_000
+
+    private var combatTimer: CountDownTimer? = null
+    private var remainingCombatMs: Long = 180_000
+
+    private lateinit var txtScore: TextView
+    private lateinit var txtRound: TextView
+    private lateinit var timerDisplay: TextView
+
+    private lateinit var layoutNormal: View
+    private lateinit var layoutRest: View
+
+    private lateinit var restTimerText: TextView
+    private lateinit var btnPauseRest: Button
+    private lateinit var btnResumeRest: Button
+
+    private lateinit var editIp: EditText
+    private lateinit var btnConnect: Button
+    private lateinit var btnDisconnect: Button
+
+    private lateinit var btnStartTimer: Button
+    private lateinit var btnPauseTimer: Button
+    private lateinit var btnPriority: Button
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_control_florete)
+
+        initializeViews()
+        stateManager = MatchStateManager(this)
+
+        // Cargar estado guardado
+        state = stateManager.loadState()
+        updateUI()
+        updatePriorityButton()
+
+        // Cargar última IP usada
+        val lastIp = stateManager.getLastIp()
+        if (lastIp.isNotEmpty()) {
+            editIp.setText(lastIp)
+
+            if (stateManager.shouldAutoReconnect()) {
+                btnConnect.postDelayed({
+                    Toast.makeText(this, "Reconectando automáticamente...", Toast.LENGTH_SHORT).show()
+                    btnConnect.isEnabled = false
+                    btnConnect.text = "RECONECTANDO..."
+                    client.connect(lastIp)
+                }, 500)
+            }
+        }
+
+        setupClientCallbacks()
+        setupButtons()
+    }
+
+    private fun initializeViews() {
+        editIp = findViewById(R.id.editIp)
+        btnConnect = findViewById(R.id.btnConnect)
+        btnDisconnect = findViewById(R.id.btnDisconnect)
+
+        txtScore = findViewById(R.id.txtScore)
+        txtRound = findViewById(R.id.txtRound)
+        timerDisplay = findViewById(R.id.timerDisplay)
+
+        layoutNormal = findViewById(R.id.layoutNormal)
+        layoutRest = findViewById(R.id.layoutRest)
+
+        restTimerText = findViewById(R.id.restTimerControl)
+        btnPauseRest = findViewById(R.id.btnPauseRest)
+        btnResumeRest = findViewById(R.id.btnResumeRest)
+
+        btnStartTimer = findViewById(R.id.btnStartTimer)
+        btnPauseTimer = findViewById(R.id.btnPauseTimer)
+        btnPriority = findViewById(R.id.btnPriority)
+    }
+
+    private fun setupClientCallbacks() {
+        client.onConnectionResult = { success, message ->
+            runOnUiThread {
+                if (success) {
+                    connected = true
+                    stateManager.clearDisconnectTime()
+                    editIp.isEnabled = false
+                    btnConnect.isEnabled = false
+                    btnConnect.visibility = View.GONE
+                    btnDisconnect.visibility = View.VISIBLE
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                    client.sendState(state)
+                } else {
+                    connected = false
+                    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                    btnConnect.isEnabled = true
+                    btnConnect.text = "CONECTAR"
+                }
+            }
+        }
+
+        client.onDisconnected = {
+            runOnUiThread {
+                connected = false
+                stateManager.saveDisconnectTime()
+                editIp.isEnabled = true
+                btnConnect.isEnabled = true
+                btnConnect.text = "CONECTAR"
+                btnConnect.visibility = View.VISIBLE
+                btnDisconnect.visibility = View.GONE
+                Toast.makeText(this, "Desconectado del marcador", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun setupButtons() {
+        btnConnect.setOnClickListener {
+            val ip = editIp.text.toString().trim()
+            if (ip.isEmpty()) {
+                Toast.makeText(this, "Ingresa una IP válida", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            btnConnect.isEnabled = false
+            btnConnect.text = "CONECTANDO..."
+            stateManager.saveLastIp(ip)
+            client.connect(ip)
+        }
+
+        btnDisconnect.setOnClickListener {
+            client.disconnect()
+        }
+
+        // Timer buttons
+        findViewById<Button>(R.id.btnTimer1Min).setOnClickListener {
+            ifCheckConnection {
+                setTimerSeconds(60)
+            }
+        }
+
+        findViewById<Button>(R.id.btnTimer3Min).setOnClickListener {
+            ifCheckConnection {
+                setTimerSeconds(180)
+            }
+        }
+
+        findViewById<Button>(R.id.btnTimerCustom).setOnClickListener {
+            ifCheckConnection {
+                showCustomTimerDialog()
+            }
+        }
+
+        btnStartTimer.setOnClickListener {
+            ifCheckConnection {
+                startCombatTimer()
+            }
+        }
+
+        btnPauseTimer.setOnClickListener {
+            ifCheckConnection {
+                pauseCombatTimer()
+            }
+        }
+
+        // Round buttons
+        findViewById<Button>(R.id.btnRoundPlus).setOnClickListener {
+            ifCheckConnection {
+                if (state.currentRound < 3) {
+                    state.currentRound++
+                    updateAndSend()
+                }
+            }
+        }
+
+        findViewById<Button>(R.id.btnRoundMinus).setOnClickListener {
+            ifCheckConnection {
+                if (state.currentRound > 1) {
+                    state.currentRound--
+                    updateAndSend()
+                }
+            }
+        }
+
+        // Priority button - UNIFICADO
+        btnPriority.setOnClickListener {
+            ifCheckConnection {
+                if (state.priorityActive) {
+                    // Quitar prioridad
+                    state.priorityActive = false
+                    Toast.makeText(this, "Prioridad eliminada", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Asignar prioridad
+                    setPriority()
+                }
+                updatePriorityButton()
+                updateAndSend()
+            }
+        }
+
+        setupScoreButtons()
+        setupCardButtons()
+        setupRestButtons()
+
+        findViewById<Button>(R.id.btnReset).setOnClickListener {
+            ifCheckConnection {
+                resetAll()
+            }
+        }
+    }
+
+    private fun setupScoreButtons() {
+        findViewById<Button>(R.id.btnLeftPlus).setOnClickListener {
+            ifCheckConnection { if (state.leftScore < 99) state.leftScore++; updateAndSend() }
+        }
+        findViewById<Button>(R.id.btnLeftMinus).setOnClickListener {
+            ifCheckConnection { if (state.leftScore > 0) state.leftScore--; updateAndSend() }
+        }
+        findViewById<Button>(R.id.btnRightPlus).setOnClickListener {
+            ifCheckConnection { if (state.rightScore < 99) state.rightScore++; updateAndSend() }
+        }
+        findViewById<Button>(R.id.btnRightMinus).setOnClickListener {
+            ifCheckConnection { if (state.rightScore > 0) state.rightScore--; updateAndSend() }
+        }
+    }
+
+    private fun setupCardButtons() {
+        val btnLeftYellow = findViewById<Button>(R.id.btnLeftYellow)
+        val btnRightYellow = findViewById<Button>(R.id.btnRightYellow)
+        val btnLeftRed = findViewById<Button>(R.id.btnLeftRed)
+        val btnRightRed = findViewById<Button>(R.id.btnRightRed)
+
+        btnLeftYellow.setOnClickListener {
+            ifCheckConnection {
+                state.leftYellow = !state.leftYellow
+                btnLeftYellow.alpha = if (state.leftYellow) 1f else 0.4f
+                updateAndSend()
+            }
+        }
+
+        btnRightYellow.setOnClickListener {
+            ifCheckConnection {
+                state.rightYellow = !state.rightYellow
+                btnRightYellow.alpha = if (state.rightYellow) 1f else 0.4f
+                updateAndSend()
+            }
+        }
+
+        btnLeftRed.setOnClickListener {
+            ifCheckConnection {
+                state.leftRed = !state.leftRed
+                btnLeftRed.alpha = if (state.leftRed) 1f else 0.4f
+                if (state.leftRed && state.rightScore < 99) state.rightScore++
+                if (!state.leftRed && state.rightScore > 0) state.rightScore--
+                updateAndSend()
+            }
+        }
+
+        btnRightRed.setOnClickListener {
+            ifCheckConnection {
+                state.rightRed = !state.rightRed
+                btnRightRed.alpha = if (state.rightRed) 1f else 0.4f
+                if (state.rightRed && state.leftScore < 99) state.leftScore++
+                if (!state.rightRed && state.leftScore > 0) state.leftScore--
+                updateAndSend()
+            }
+        }
+    }
+
+    private fun setupRestButtons() {
+        findViewById<Button>(R.id.btnRest).setOnClickListener {
+            ifCheckConnection { startRestMinute() }
+        }
+
+        btnPauseRest.setOnClickListener { pauseRest() }
+        btnResumeRest.setOnClickListener { resumeRest() }
+
+        findViewById<Button>(R.id.btnEndRest).setOnClickListener {
+            endRestMinute()
+        }
+    }
+
+    private fun setTimerSeconds(seconds: Int) {
+        // Detener el timer si está corriendo
+        combatTimer?.cancel()
+
+        state.timerSeconds = seconds
+        state.timerRunning = false
+        state.timerPaused = false
+        remainingCombatMs = (seconds * 1000).toLong()
+
+        // Actualizar UI de botones
+        btnStartTimer.visibility = View.VISIBLE
+        btnPauseTimer.visibility = View.GONE
+
+        updateAndSend()
+    }
+
+    private fun startCombatTimer() {
+        state.timerRunning = true
+        state.timerPaused = false
+        btnStartTimer.visibility = View.GONE
+        btnPauseTimer.visibility = View.VISIBLE
+
+        combatTimer = object : CountDownTimer(remainingCombatMs, 1000) {
+            override fun onTick(ms: Long) {
+                remainingCombatMs = ms
+                state.timerSeconds = (ms / 1000).toInt()
+                updateAndSend()
+            }
+
+            override fun onFinish() {
+                state.timerSeconds = 0
+                state.timerRunning = false
+                btnStartTimer.visibility = View.VISIBLE
+                btnPauseTimer.visibility = View.GONE
+                updateAndSend()
+            }
+        }.start()
+
+        updateAndSend()
+    }
+
+    private fun pauseCombatTimer() {
+        combatTimer?.cancel()
+        state.timerPaused = true
+        state.timerRunning = false
+        btnStartTimer.visibility = View.VISIBLE
+        btnPauseTimer.visibility = View.GONE
+        updateAndSend()
+    }
+
+    private fun showCustomTimerDialog() {
+        val input = EditText(this)
+        input.hint = "Segundos (ej: 120 para 2 min)"
+        input.inputType = android.text.InputType.TYPE_CLASS_NUMBER
+
+        AlertDialog.Builder(this)
+            .setTitle("Tiempo personalizado")
+            .setMessage("Ingresa los segundos:")
+            .setView(input)
+            .setPositiveButton("OK") { _, _ ->
+                val seconds = input.text.toString().toIntOrNull()
+                if (seconds != null && seconds > 0) {
+                    setTimerSeconds(seconds)
+                } else {
+                    Toast.makeText(this, "Valor inválido", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+
+    private fun setPriority() {
+        state.priorityActive = true
+        state.priorityLeft = Random.nextBoolean()
+
+        val side = if (state.priorityLeft) "IZQUIERDA" else "DERECHA"
+        Toast.makeText(this, "Prioridad: $side", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun updatePriorityButton() {
+        if (state.priorityActive) {
+            val side = if (state.priorityLeft) "←" else "→"
+            btnPriority.text = "QUITAR PRIORIDAD"
+        } else {
+            btnPriority.text = "ASIGNAR PRIORIDAD"
+        }
+    }
+
+    private fun startRestMinute() {
+        layoutNormal.visibility = View.GONE
+        layoutRest.visibility = View.VISIBLE
+
+        remainingRestMs = 60_000
+        state.restActive = true
+        state.restPaused = false
+
+        restTimer = object : CountDownTimer(remainingRestMs, 1000) {
+            override fun onTick(ms: Long) {
+                remainingRestMs = ms
+                state.restSecondsRemaining = (ms / 1000).toInt()
+                restTimerText.text = formatTime(state.restSecondsRemaining)
+                updateAndSend()
+            }
+
+            override fun onFinish() {
+                state.restSecondsRemaining = 0
+                restTimerText.text = "0:00"
+                updateAndSend()
+
+                restTimerText.postDelayed({
+                    endRestMinute()
+                }, 1000)
+            }
+        }.start()
+    }
+
+    private fun pauseRest() {
+        restTimer?.cancel()
+        state.restPaused = true
+        btnPauseRest.visibility = View.GONE
+        btnResumeRest.visibility = View.VISIBLE
+        updateAndSend()
+    }
+
+    private fun resumeRest() {
+        state.restPaused = false
+        btnPauseRest.visibility = View.VISIBLE
+        btnResumeRest.visibility = View.GONE
+
+        restTimer = object : CountDownTimer(remainingRestMs, 1000) {
+            override fun onTick(ms: Long) {
+                remainingRestMs = ms
+                state.restSecondsRemaining = (ms / 1000).toInt()
+                restTimerText.text = formatTime(state.restSecondsRemaining)
+                updateAndSend()
+            }
+
+            override fun onFinish() {
+                state.restSecondsRemaining = 0
+                endRestMinute()
+            }
+        }.start()
+    }
+
+    private fun endRestMinute() {
+        restTimer?.cancel()
+        state.restActive = false
+        state.restPaused = false
+        updateAndSend()
+
+        layoutRest.visibility = View.GONE
+        layoutNormal.visibility = View.VISIBLE
+    }
+
+    private fun resetAll() {
+        combatTimer?.cancel()
+
+        state.leftScore = 0
+        state.rightScore = 0
+        state.leftYellow = false
+        state.rightYellow = false
+        state.leftRed = false
+        state.rightRed = false
+        state.timerSeconds = 180
+        state.timerRunning = false
+        state.timerPaused = false
+        state.currentRound = 1
+        state.priorityActive = false
+
+        remainingCombatMs = 180_000
+        btnStartTimer.visibility = View.VISIBLE
+        btnPauseTimer.visibility = View.GONE
+
+        updateUI()
+        updateCardButtons()
+        updatePriorityButton()
+        stateManager.saveState(state)
+        client.sendState(state)
+    }
+
+    private fun updateUI() {
+        txtScore.text = String.format("%02d - %02d", state.leftScore, state.rightScore)
+        txtRound.text = "  |  ${state.currentRound}/3"
+        timerDisplay.text = formatTime(state.timerSeconds)
+    }
+
+    private fun updateCardButtons() {
+        findViewById<Button>(R.id.btnLeftYellow).alpha = if (state.leftYellow) 1f else 0.4f
+        findViewById<Button>(R.id.btnRightYellow).alpha = if (state.rightYellow) 1f else 0.4f
+        findViewById<Button>(R.id.btnLeftRed).alpha = if (state.leftRed) 1f else 0.4f
+        findViewById<Button>(R.id.btnRightRed).alpha = if (state.rightRed) 1f else 0.4f
+    }
+
+    private fun updateAndSend() {
+        updateUI()
+        stateManager.saveState(state)
+        client.sendState(state)
+    }
+
+    private fun ifCheckConnection(action: () -> Unit) {
+        if (!connected) {
+            Toast.makeText(this, "Debe conectarse primero", Toast.LENGTH_SHORT).show()
+        } else {
+            action()
+        }
+    }
+
+    private fun formatTime(sec: Int): String {
+        val m = sec / 60
+        val s = sec % 60
+        return String.format("%d:%02d", m, s)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        restTimer?.cancel()
+        combatTimer?.cancel()
+        client.disconnect()
+    }
+}

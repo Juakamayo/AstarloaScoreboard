@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/panel_surface"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <!-- IZQUIERDA -->
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/panel_surface_alt">
+
+            <TextView
+                android:id="@+id/scoreLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="monospace"
+                android:text="00"
+                android:textColor="@android:color/white"
+                android:textSize="140sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:shadowColor="#66000000"
+                android:shadowDx="0"
+                android:shadowDy="4"
+                android:shadowRadius="8"/>
+
+            <LinearLayout
+                android:id="@+id/cardsLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="24dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/cardLeftYellow"
+                    android:layout_width="48dp"
+                    android:layout_height="72dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@color/yellow"
+                    android:visibility="gone" />
+
+                <View
+                    android:id="@+id/cardLeftRed"
+                    android:layout_width="48dp"
+                    android:layout_height="72dp"
+                    android:background="@color/red"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <!-- SEPARADOR CENTRAL -->
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/white" />
+
+        <!-- DERECHA -->
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@drawable/panel_surface">
+
+            <TextView
+                android:id="@+id/scoreRight"
+                android:text="00"
+                android:textColor="@android:color/white"
+                android:fontFamily="monospace"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="140sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:shadowColor="#66000000"
+                android:shadowDx="0"
+                android:shadowDy="4"
+                android:shadowRadius="8"/>
+
+            <LinearLayout
+                android:id="@+id/cardsRight"
+                android:orientation="horizontal"
+                android:layout_gravity="bottom|start"
+                android:layout_margin="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/cardRightYellow"
+                    android:visibility="gone"
+                    android:background="@color/yellow"
+                    android:layout_width="48dp"
+                    android:layout_height="72dp"
+                    android:layout_marginEnd="16dp"/>
+
+                <View
+                    android:id="@+id/cardRightRed"
+                    android:layout_width="48dp"
+                    android:layout_height="72dp"
+                    android:background="@color/red"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <!-- PANEL CENTRAL CON TIMER Y RONDA -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:background="#CC000000"
+        android:padding="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/timerText"
+            android:text="3:00"
+            android:textColor="@android:color/white"
+            android:textSize="72sp"
+            android:fontFamily="monospace"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowColor="#000000"
+            android:shadowDx="0"
+            android:shadowDy="2"
+            android:shadowRadius="4"/>
+
+        <TextView
+            android:id="@+id/roundText"
+            android:text="1/3"
+            android:textColor="@color/text_secondary"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <!-- LUZ DE PRIORIDAD (CIRCULAR) -->
+    <FrameLayout
+        android:id="@+id/priorityLight"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="80dp"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/priorityCircle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/priority_circle"/>
+
+    </FrameLayout>
+
+    <!-- IP EN LA PARTE SUPERIOR -->
+    <TextView
+        android:id="@+id/txtIp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="8dp"
+        android:background="@color/surface_1"
+        android:padding="6dp"
+        android:text="IP: 0.0.0.0"
+        android:textColor="@color/text_secondary"
+        android:textSize="12sp"
+        android:elevation="10dp"
+        android:clickable="true"
+        android:focusable="true"/>
+
+    <!-- OVERLAY DESCANSO -->
+    <include layout="@layout/overlay_rest"/>
+
+</FrameLayout>

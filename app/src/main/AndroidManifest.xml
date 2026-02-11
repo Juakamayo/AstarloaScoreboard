@@ -14,13 +14,20 @@
         android:label="Astarloa Esgrima"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
 
-
         <activity
             android:name=".ControlActivity"
             android:screenOrientation="portrait"/>
 
         <activity
             android:name=".MarcadorActivity"
+            android:screenOrientation="landscape"/>
+
+        <activity
+            android:name=".ControlFloreteActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".MarcadorFloreteActivity"
             android:screenOrientation="landscape"/>
 
         <activity
@@ -34,7 +41,6 @@
             </intent-filter>
 
         </activity>
-
 
     </application>
 </manifest>

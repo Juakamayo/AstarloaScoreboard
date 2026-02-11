@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/bg_dark"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- PANTALLA NORMAL -->
+    <ScrollView
+        android:id="@+id/layoutNormal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:paddingBottom="16dp"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:paddingBottom="32dp">
+
+            <!-- CONEXION -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <EditText
+                    android:id="@+id/editIp"
+                    android:hint="IP del Marcador"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@color/text_hint"
+                    android:background="@drawable/bg_input"
+                    android:padding="12dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:inputType="numberDecimal"
+                    android:digits="0123456789."/>
+
+                <Button
+                    android:id="@+id/btnConnect"
+                    android:text="CONECTAR"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/btn_orange"
+                    android:layout_marginStart="8dp"
+                    android:layout_width="120dp"
+                    android:layout_height="48dp"/>
+
+                <Button
+                    android:id="@+id/btnDisconnect"
+                    android:text="✕"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/btn_red"
+                    android:layout_marginStart="8dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:visibility="gone"
+                    android:textSize="24sp"/>
+            </LinearLayout>
+
+            <!-- MARCADOR ACTUAL Y RONDA -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:id="@+id/txtScore"
+                    android:text="00 - 00"
+                    android:textColor="@android:color/white"
+                    android:textSize="36sp"
+                    android:textStyle="bold"
+                    android:fontFamily="monospace"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/txtRound"
+                    android:text="  |  1/3"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <!-- TIMER DEL COMBATE -->
+            <LinearLayout
+                android:orientation="vertical"
+                android:background="@drawable/panel_surface"
+                android:padding="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="TIMER DEL COMBATE"
+                    android:textColor="@color/orange"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/timerDisplay"
+                    android:text="3:00"
+                    android:textColor="@android:color/white"
+                    android:textSize="48sp"
+                    android:fontFamily="monospace"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp">
+
+                    <Button
+                        android:id="@+id/btnTimer1Min"
+                        android:text="1 MIN"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/btn_orange"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_marginEnd="4dp"/>
+
+                    <Button
+                        android:id="@+id/btnTimer3Min"
+                        android:text="3 MIN"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/btn_orange"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="4dp"/>
+
+                    <Button
+                        android:id="@+id/btnTimerCustom"
+                        android:text="CUSTOM"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/btn_orange"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="4dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/btnStartTimer"
+                        android:text="INICIAR"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/btn_green"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_marginEnd="4dp"/>
+
+                    <Button
+                        android:id="@+id/btnPauseTimer"
+                        android:text="PAUSAR"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/btn_yellow"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="4dp"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- RONDAS -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <Button
+                    android:id="@+id/btnRoundMinus"
+                    android:text="- RONDA"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/btn_purple"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="4dp"/>
+
+                <Button
+                    android:id="@+id/btnRoundPlus"
+                    android:text="RONDA +"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/btn_purple"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="4dp"/>
+            </LinearLayout>
+
+            <!-- PRIORIDAD - BOTÓN GRANDE ÚNICO -->
+            <Button
+                android:id="@+id/btnPriority"
+                android:text="PRIORIDAD"
+                android:textColor="@android:color/white"
+                android:background="@drawable/btn_blue"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- CONTROLES DE PUNTOS -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <!-- LADO IZQUIERDO -->
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/btnLeftPlus"
+                        android:text="+ PUNTO"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/btn_green"
+                        android:layout_height="56dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_width="match_parent"/>
+
+                    <Button
+                        android:id="@+id/btnLeftMinus"
+                        android:text="- PUNTO"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/btn_red"
+                        android:layout_height="56dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_width="match_parent"/>
+
+                    <Button
+                        android:id="@+id/btnLeftYellow"
+                        android:text="AMARILLA"
+                        android:textColor="@android:color/black"
+                        android:background="@drawable/btn_yellow"
+                        android:alpha="0.4"
+                        android:layout_height="56dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_width="match_parent"/>
+
+                    <Button
+                        android:id="@+id/btnLeftRed"
+                        android:text="ROJA"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/btn_red"
+                        android:alpha="0.4"
+                        android:layout_height="56dp"
+                        android:layout_width="match_parent"/>
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="16dp"
+                    android:layout_height="wrap_content"/>
+
+                <!-- LADO DERECHO -->
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/btnRightPlus"
+                        android:text="+ PUNTO"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/btn_green"
+                        android:layout_height="56dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_width="match_parent"/>
+
+                    <Button
+                        android:id="@+id/btnRightMinus"
+                        android:text="- PUNTO"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/btn_red"
+                        android:layout_height="56dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_width="match_parent"/>
+
+                    <Button
+                        android:id="@+id/btnRightYellow"
+                        android:text="AMARILLA"
+                        android:textColor="@android:color/black"
+                        android:background="@drawable/btn_yellow"
+                        android:alpha="0.4"
+                        android:layout_height="56dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_width="match_parent"/>
+
+                    <Button
+                        android:id="@+id/btnRightRed"
+                        android:text="ROJA"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/btn_red"
+                        android:alpha="0.4"
+                        android:layout_height="56dp"
+                        android:layout_width="match_parent"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- BOTONES INFERIORES -->
+            <Button
+                android:id="@+id/btnRest"
+                android:text="1 MIN DESCANSO"
+                android:textColor="@android:color/white"
+                android:background="@drawable/btn_orange"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="12dp"/>
+
+            <Button
+                android:id="@+id/btnReset"
+                android:text="REINICIAR TODO"
+                android:textColor="@android:color/white"
+                android:background="@drawable/btn_red"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="24dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- PANTALLA MINUTO DE DESCANSO -->
+    <LinearLayout
+        android:id="@+id/layoutRest"
+        android:visibility="gone"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:text="MINUTO DE DESCANSO"
+            android:textColor="@color/orange"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/restTimerControl"
+            android:text="1:00"
+            android:textColor="@android:color/white"
+            android:textSize="64sp"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnPauseRest"
+            android:text="PAUSAR"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_yellow"
+            android:layout_width="200dp"
+            android:layout_height="56dp"
+            android:layout_marginBottom="12dp"/>
+
+        <Button
+            android:id="@+id/btnResumeRest"
+            android:text="REANUDAR"
+            android:visibility="gone"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_green"
+            android:layout_width="200dp"
+            android:layout_height="56dp"
+            android:layout_marginBottom="12dp"/>
+
+        <Button
+            android:id="@+id/btnEndRest"
+            android:text="TERMINAR"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_red"
+            android:layout_width="200dp"
+            android:layout_height="56dp"/>
+    </LinearLayout>
+
+</FrameLayout>

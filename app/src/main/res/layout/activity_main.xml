@@ -32,26 +32,15 @@
             android:layout_marginBottom="16dp"/>
 
         <Button
-            android:id="@+id/btnEspada"
-            android:text="ESPADA"
-            android:alpha="0.4"
-            android:textColor="@android:color/white"
-            android:background="@drawable/btn_orange"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginBottom="16dp"/>
-
-        <Button
-            android:id="@+id/btnFlorete"
-            android:text="FLORETE"
-            android:alpha="0.4"
+            android:id="@+id/btnFloreteEspada"
+            android:text="FLORETE / ESPADA"
             android:textColor="@android:color/white"
             android:background="@drawable/btn_orange"
             android:layout_width="match_parent"
             android:layout_height="56dp"/>
     </LinearLayout>
 
-    <!-- SELECCION DE MODO -->
+    <!-- SELECCION DE MODO - SABLE -->
     <LinearLayout
         android:id="@+id/layoutMode"
         android:visibility="gone"
@@ -90,6 +79,52 @@
 
         <Button
             android:id="@+id/btnAtras"
+            android:text="ATRAS"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_red"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"/>
+    </LinearLayout>
+
+    <!-- SELECCION DE MODO - FLORETE/ESPADA -->
+    <LinearLayout
+        android:id="@+id/layoutModeFloreteEspada"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:text="FLORETE / ESPADA"
+            android:textColor="@color/orange"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="32dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnMarcadorFloreteEspada"
+            android:text="MARCADOR"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_orange"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/btnControlFloreteEspada"
+            android:text="CONTROL"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_orange"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="24dp"/>
+
+        <Button
+            android:id="@+id/btnAtrasFloreteEspada"
             android:text="ATRAS"
             android:textColor="@android:color/white"
             android:background="@drawable/btn_red"
