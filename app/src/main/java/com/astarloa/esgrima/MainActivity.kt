@@ -77,9 +77,10 @@ class MainActivity : AppCompatActivity() {
             <b>Versión Actual:</b> $versionName<br>
             <br>
             <b>Última Novedad:</b><br>
-            - Efecto Flash al anotar puntos<br>
-            - Corrección de crash en modo Sable<br>
-            - Boton "about it"<br>
+            - El sistema ahora detecta automáticamente si transcurre 1 minuto sin interrupciones.<br>
+            - Al cumplirse el minuto, el tiempo se pausa solo y el marcador emite un aviso sonoro específico para alertar al árbitro.<br>
+            - Se han añadido alertas auditivas en el marcador de Florete/Espada.<br>
+            - Se ha forzado el modo "Pantalla Encendida" en los Controles (Sable y Florete).<br>
             <br>
             <b>Creado por:</b><br>
             Joaquin Pizarro (Sablista)<br>

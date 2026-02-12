@@ -15,8 +15,12 @@ import java.util.*
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.graphics.drawable.GradientDrawable
+import android.media.AudioManager
+import android.media.ToneGenerator
 
 class MarcadorFloreteActivity : AppCompatActivity() {
+
+    private val toneGen = ToneGenerator(AudioManager.STREAM_ALARM, 100) //sonido volumen 100
 
     private lateinit var layoutLeft: View
     private lateinit var layoutRight: View
@@ -118,6 +122,12 @@ class MarcadorFloreteActivity : AppCompatActivity() {
                 }
                 if (newState.rightScore > currentState.rightScore) {
                     flashBackground(layoutRight, R.color.surface_1, R.color.flash_green)
+                }
+                if (newState.soundCode != 0 && newState.soundCode != currentState.soundCode) {
+                    when (newState.soundCode) {
+                        1 -> toneGen.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 2000) // Fin: Largo (2s)
+                        2 -> toneGen.startTone(ToneGenerator.TONE_SUP_BUSY, 1000) // Pasividad: Pitido repetido (1s)
+                    }
                 }
 
                 // Actualizar estado

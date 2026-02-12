@@ -10,6 +10,8 @@ import kotlin.random.Random
 
 class ControlFloreteActivity : AppCompatActivity() {
 
+    private var continuousSeconds = 0 // Contador para la pasividad
+
     private var state = MatchState()
     private val client = TcpClient()
     private var connected = false
@@ -43,6 +45,8 @@ class ControlFloreteActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_control_florete)
+
+        window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         initializeViews()
         stateManager = MatchStateManager(this)
@@ -311,6 +315,9 @@ class ControlFloreteActivity : AppCompatActivity() {
     private fun startCombatTimer() {
         state.timerRunning = true
         state.timerPaused = false
+        state.soundCode = 0 // Reiniciar sonido al arrancar
+        continuousSeconds = 0 // Reiniciar contador de pasividad
+
         btnStartTimer.visibility = View.GONE
         btnPauseTimer.visibility = View.VISIBLE
 
@@ -318,12 +325,26 @@ class ControlFloreteActivity : AppCompatActivity() {
             override fun onTick(ms: Long) {
                 remainingCombatMs = ms
                 state.timerSeconds = (ms / 1000).toInt()
+
+                continuousSeconds++
+                if (continuousSeconds >= 60) {
+                    pauseCombatTimer()
+
+                    // Mandar señal de sonido y alerta
+                    state.soundCode = 2
+                    Toast.makeText(this@ControlFloreteActivity, "1 Minuto de Pasividad", Toast.LENGTH_LONG).show()
+                } else {
+                    state.soundCode = 0 // Asegurar que no suene nada
+                }
+
                 updateAndSend()
             }
 
             override fun onFinish() {
                 state.timerSeconds = 0
                 state.timerRunning = false
+                state.soundCode = 1
+
                 btnStartTimer.visibility = View.VISIBLE
                 btnPauseTimer.visibility = View.GONE
                 updateAndSend()

@@ -30,6 +30,8 @@ class ControlActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_control)
 
+        window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
         editIp = findViewById(R.id.editIp)
         btnConnect = findViewById(R.id.btnConnect)
         btnDisconnect = findViewById(R.id.btnDisconnect)

@@ -20,5 +20,6 @@ data class MatchState(
     var timerPaused: Boolean = false,
     var currentRound: Int = 1,  // Ronda actual (1-3) (MAX 3) (cambiar de ser necesario?)
     var priorityActive: Boolean = false,  // Si hay prioridad asignada
-    var priorityLeft: Boolean = false  // true = izquierda, false = derecha
+    var priorityLeft: Boolean = false,  // true = izquierda, false = derecha
+    var soundCode: Int = 0 // 0: Silencio, 1: Fin de Tiempo, 2: Pasividad (1 min)
 )
