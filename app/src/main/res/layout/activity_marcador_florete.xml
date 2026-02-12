@@ -11,6 +11,7 @@
 
         <!-- IZQUIERDA -->
         <FrameLayout
+            android:id="@+id/layoutLeft"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -66,6 +67,7 @@
 
         <!-- DERECHA -->
         <FrameLayout
+            android:id="@+id/layoutRight"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"

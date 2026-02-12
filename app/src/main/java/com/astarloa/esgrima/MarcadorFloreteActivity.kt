@@ -12,8 +12,14 @@ import androidx.appcompat.app.AppCompatActivity
 import java.net.Inet4Address
 import java.net.NetworkInterface
 import java.util.*
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
+import android.graphics.drawable.GradientDrawable
 
 class MarcadorFloreteActivity : AppCompatActivity() {
+
+    private lateinit var layoutLeft: View
+    private lateinit var layoutRight: View
 
     private lateinit var server: TcpServer
     private lateinit var stateManager: MatchStateManager
@@ -38,11 +44,32 @@ class MarcadorFloreteActivity : AppCompatActivity() {
 
     private var priorityLightReady = false
 
+    private fun flashBackground(view: View, originalColorRes: Int, flashColorRes: Int) {
+        // Obtenemos el fondo (que es un Shape/GradientDrawable)
+        val bgDrawable = view.background as? GradientDrawable ?: return
+
+        val colorOriginal = getColor(originalColorRes)
+        val colorFlash = getColor(flashColorRes)
+
+        // Animación: Original -> Flash -> Original
+        val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), colorOriginal, colorFlash, colorOriginal)
+        colorAnimation.duration = 700 // Duración en milisegundos (rápido)
+
+        colorAnimation.addUpdateListener { animator ->
+            bgDrawable.setColor(animator.animatedValue as Int)
+        }
+
+        colorAnimation.start()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_marcador_florete)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+        layoutLeft = findViewById(R.id.layoutLeft)
+        layoutRight = findViewById(R.id.layoutRight)
 
         scoreLeft = findViewById(R.id.scoreLeft)
         scoreRight = findViewById(R.id.scoreRight)
@@ -82,11 +109,21 @@ class MarcadorFloreteActivity : AppCompatActivity() {
         val localIp = getLocalIpAddress()
         txtIp.text = "IP: $localIp"
 
-        server = TcpServer { state ->
-            currentState = state
+        server = TcpServer { newState ->
             runOnUiThread {
-                updateUI(state)
-                stateManager.saveState(state)
+                // DETECTAR SUBIDA DE PUNTOS
+                // Si el nuevo puntaje es mayor al actual, lanzar flash
+                if (newState.leftScore > currentState.leftScore) {
+                    flashBackground(layoutLeft, R.color.surface_2, R.color.flash_red)
+                }
+                if (newState.rightScore > currentState.rightScore) {
+                    flashBackground(layoutRight, R.color.surface_1, R.color.flash_green)
+                }
+
+                // Actualizar estado normalmente
+                currentState = newState
+                updateUI(newState)
+                stateManager.saveState(newState)
             }
         }
 
