@@ -74,15 +74,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         val message = """
-            <b>Versión Actual:</b> $versionName<br>
+            <b>Versión Actual:</b> ${'$'}versionName<br>
             <br>
-            <b>Última Novedad (v1.10):</b><br>
+            <b>Última Novedad (v1.11):</b><br>
+            - Los botones de tarjeta P ahora se ocultan automáticamente cuando se desactiva la función de pasividad.<br>
+            - Interfaz más limpia y adaptable según la configuración activa.<br>
+            - Mejor aprovechamiento del espacio en pantalla.<br>
+            <br>
+            <b>Novedades anteriores (v1.10):</b><br>
             - Se agregó un sistema de configuración en Florete/Espada.<br>
             - Nuevas tarjetas "P" (Pasividad/Penalización) diferenciadas con una letra P.<br>
             - Opción para activar/desactivar tarjeta P automática por inactividad (1 minuto).<br>
             - Opción para activar/desactivar sonidos del marcador.<br>
             <br>
-            <b>Novedades anteriores:</b><br>
+            <b>Otras características:</b><br>
             - El sistema detecta automáticamente 1 minuto sin interrupciones.<br>
             - Alertas auditivas en el marcador de Florete/Espada.<br>
             - Modo "Pantalla Encendida" en los Controles.<br>

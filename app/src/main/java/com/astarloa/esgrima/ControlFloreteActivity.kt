@@ -56,6 +56,7 @@ class ControlFloreteActivity : AppCompatActivity() {
         state = stateManager.loadState()
         updateUI()
         updatePriorityButton()
+        updatePCardButtonsVisibility() // Aplicar visibilidad inicial de botones P
 
         // Cargar última IP usada
         val lastIp = stateManager.getLastIp()
@@ -246,6 +247,9 @@ class ControlFloreteActivity : AppCompatActivity() {
             .setPositiveButton("GUARDAR") { _, _ ->
                 state.passivityCardEnabled = checkPassivityCard.isChecked
                 state.soundsEnabled = checkSounds.isChecked
+
+                // Mostrar u ocultar botones P según la configuración
+                updatePCardButtonsVisibility()
 
                 updateAndSend()
                 Toast.makeText(this, "Configuración guardada", Toast.LENGTH_SHORT).show()
@@ -586,6 +590,15 @@ class ControlFloreteActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnRightYellowP).alpha = if (state.rightYellowP) 1f else 0.4f
         findViewById<Button>(R.id.btnLeftRedP).alpha = if (state.leftRedP) 1f else 0.4f
         findViewById<Button>(R.id.btnRightRedP).alpha = if (state.rightRedP) 1f else 0.4f
+    }
+
+    private fun updatePCardButtonsVisibility() {
+        val visibility = if (state.passivityCardEnabled) View.VISIBLE else View.GONE
+
+        findViewById<Button>(R.id.btnLeftYellowP).visibility = visibility
+        findViewById<Button>(R.id.btnRightYellowP).visibility = visibility
+        findViewById<Button>(R.id.btnLeftRedP).visibility = visibility
+        findViewById<Button>(R.id.btnRightRedP).visibility = visibility
     }
 
     private fun updateAndSend() {
