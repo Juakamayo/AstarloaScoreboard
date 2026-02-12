@@ -3,6 +3,7 @@ package com.astarloa.esgrima
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.WindowManager
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
@@ -35,6 +36,8 @@ class MarcadorFloreteActivity : AppCompatActivity() {
     private lateinit var restPausedText: TextView
     private lateinit var txtIp: TextView
 
+    private var priorityLightReady = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_marcador_florete)
@@ -57,6 +60,18 @@ class MarcadorFloreteActivity : AppCompatActivity() {
         restTimerText = findViewById(R.id.restTimerText)
         restPausedText = findViewById(R.id.restPausedText)
         txtIp = findViewById(R.id.txtIp)
+
+        // Esperar a que el layout esté listo para animaciones
+        priorityLight.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                priorityLight.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                priorityLightReady = true
+                // Si ya hay un estado con prioridad activa, actualizarlo ahora
+                if (currentState.priorityActive) {
+                    updatePriorityUI(currentState)
+                }
+            }
+        })
 
         stateManager = MatchStateManager(this)
 
@@ -116,32 +131,7 @@ class MarcadorFloreteActivity : AppCompatActivity() {
         roundText.text = "${state.currentRound}/3"
 
         // Prioridad
-        if (state.priorityActive) {
-            priorityLight.visibility = View.VISIBLE
-
-            // Animar la luz moviéndose al lado correspondiente
-            val targetX = if (state.priorityLeft) {
-                -priorityLight.width.toFloat() * 2
-            } else {
-                priorityLight.width.toFloat() * 2
-            }
-
-            ObjectAnimator.ofFloat(priorityLight, "translationX", targetX).apply {
-                duration = 800
-                interpolator = AccelerateDecelerateInterpolator()
-                start()
-            }
-
-            // Efecto de pulso
-            ObjectAnimator.ofFloat(priorityCircle, "alpha", 1f, 0.3f, 1f).apply {
-                duration = 1000
-                repeatCount = 2
-                start()
-            }
-        } else {
-            priorityLight.visibility = View.GONE
-            priorityLight.translationX = 0f
-        }
+        updatePriorityUI(state)
 
         // Descanso
         if (state.restActive) {
@@ -150,6 +140,57 @@ class MarcadorFloreteActivity : AppCompatActivity() {
             restPausedText.visibility = if (state.restPaused) View.VISIBLE else View.GONE
         } else {
             restOverlay.visibility = View.GONE
+        }
+    }
+
+    private fun updatePriorityUI(state: MatchState) {
+        if (state.priorityActive) {
+            priorityLight.visibility = View.VISIBLE
+
+            // Solo animar si el layout ya está listo
+            if (priorityLightReady && priorityLight.width > 0) {
+                // Animar la luz moviéndose al lado correspondiente
+                val targetX = if (state.priorityLeft) {
+                    -priorityLight.width.toFloat() * 2
+                } else {
+                    priorityLight.width.toFloat() * 2
+                }
+
+                ObjectAnimator.ofFloat(priorityLight, "translationX", targetX).apply {
+                    duration = 800
+                    interpolator = AccelerateDecelerateInterpolator()
+                    start()
+                }
+
+                // Efecto de pulso
+                ObjectAnimator.ofFloat(priorityCircle, "alpha", 1f, 0.3f, 1f).apply {
+                    duration = 1000
+                    repeatCount = 2
+                    start()
+                }
+            } else {
+                // Si el layout no está listo, posicionar directamente sin animación
+                priorityLight.post {
+                    if (priorityLight.width > 0) {
+                        val targetX = if (state.priorityLeft) {
+                            -priorityLight.width.toFloat() * 2
+                        } else {
+                            priorityLight.width.toFloat() * 2
+                        }
+                        priorityLight.translationX = targetX
+
+                        // Efecto de pulso
+                        ObjectAnimator.ofFloat(priorityCircle, "alpha", 1f, 0.3f, 1f).apply {
+                            duration = 1000
+                            repeatCount = 2
+                            start()
+                        }
+                    }
+                }
+            }
+        } else {
+            priorityLight.visibility = View.GONE
+            priorityLight.translationX = 0f
         }
     }
 
