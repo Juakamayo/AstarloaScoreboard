@@ -47,7 +47,7 @@ class ControlFloreteActivity : AppCompatActivity() {
         initializeViews()
         stateManager = MatchStateManager(this)
 
-        // Cargar estado guardado
+
         state = stateManager.loadState()
         updateUI()
         updatePriorityButton()
@@ -145,7 +145,7 @@ class ControlFloreteActivity : AppCompatActivity() {
             client.disconnect()
         }
 
-        // Timer buttons
+        // Timer
         findViewById<Button>(R.id.btnTimer1Min).setOnClickListener {
             ifCheckConnection {
                 setTimerSeconds(60)
@@ -176,7 +176,7 @@ class ControlFloreteActivity : AppCompatActivity() {
             }
         }
 
-        // Round buttons
+        //Rondas
         findViewById<Button>(R.id.btnRoundPlus).setOnClickListener {
             ifCheckConnection {
                 if (state.currentRound < 3) {
@@ -195,7 +195,6 @@ class ControlFloreteActivity : AppCompatActivity() {
             }
         }
 
-        // Priority button - UNIFICADO
         btnPriority.setOnClickListener {
             ifCheckConnection {
                 if (state.priorityActive) {
@@ -294,7 +293,7 @@ class ControlFloreteActivity : AppCompatActivity() {
     }
 
     private fun setTimerSeconds(seconds: Int) {
-        // Detener el timer si está corriendo
+
         combatTimer?.cancel()
 
         state.timerSeconds = seconds
@@ -302,7 +301,7 @@ class ControlFloreteActivity : AppCompatActivity() {
         state.timerPaused = false
         remainingCombatMs = (seconds * 1000).toLong()
 
-        // Actualizar UI de botones
+
         btnStartTimer.visibility = View.VISIBLE
         btnPauseTimer.visibility = View.GONE
 

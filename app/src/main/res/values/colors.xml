@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg_dark">#0E0E0E</color>        <!-- más profundo -->
-    <color name="surface_1">#1C1C1E</color>      <!-- estilo Material dark -->
+    <color name="bg_dark">#0E0E0E</color>
+    <color name="surface_1">#1C1C1E</color>
     <color name="surface_2">#242426</color>
 
 

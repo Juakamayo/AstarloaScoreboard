@@ -2,9 +2,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/bg_dark">
 
-    <!-- SELECCION DE ARMA -->
+
     <LinearLayout
         android:id="@+id/layoutWeapons"
         android:layout_width="match_parent"
@@ -12,6 +13,8 @@
         android:gravity="center"
         android:orientation="vertical"
         android:padding="24dp">
+
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -40,7 +43,6 @@
             android:layout_height="56dp"/>
     </LinearLayout>
 
-    <!-- SELECCION DE MODO - SABLE -->
     <LinearLayout
         android:id="@+id/layoutMode"
         android:visibility="gone"
@@ -86,7 +88,7 @@
             android:layout_height="56dp"/>
     </LinearLayout>
 
-    <!-- SELECCION DE MODO - FLORETE/ESPADA -->
+
     <LinearLayout
         android:id="@+id/layoutModeFloreteEspada"
         android:visibility="gone"
@@ -114,6 +116,8 @@
             android:layout_height="56dp"
             android:layout_marginBottom="16dp"/>
 
+
+
         <Button
             android:id="@+id/btnControlFloreteEspada"
             android:text="CONTROL"
@@ -130,6 +134,22 @@
             android:background="@drawable/btn_red"
             android:layout_width="match_parent"
             android:layout_height="56dp"/>
+
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/btnAbout"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="64dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_info"
+        android:contentDescription="Acerca de"
+        android:padding="12dp"
+        app:tint="#80FFFFFF" />
+
 </FrameLayout>
+
+

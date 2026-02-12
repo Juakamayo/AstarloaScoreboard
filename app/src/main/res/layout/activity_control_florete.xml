@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- PANTALLA NORMAL -->
+
     <ScrollView
         android:id="@+id/layoutNormal"
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             android:padding="16dp"
             android:paddingBottom="32dp">
 
-            <!-- CONEXION -->
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -61,7 +61,7 @@
                     android:textSize="24sp"/>
             </LinearLayout>
 
-            <!-- MARCADOR ACTUAL Y RONDA -->
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:gravity="center"
@@ -90,7 +90,7 @@
 
             </LinearLayout>
 
-            <!-- TIMER DEL COMBATE -->
+
             <LinearLayout
                 android:orientation="vertical"
                 android:background="@drawable/panel_surface"
@@ -187,7 +187,7 @@
 
             </LinearLayout>
 
-            <!-- RONDAS -->
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -215,7 +215,7 @@
                     android:layout_marginStart="4dp"/>
             </LinearLayout>
 
-            <!-- PRIORIDAD - BOTÓN GRANDE ÚNICO -->
+
             <Button
                 android:id="@+id/btnPriority"
                 android:text="PRIORIDAD"
@@ -227,14 +227,14 @@
                 android:layout_height="56dp"
                 android:layout_marginBottom="16dp"/>
 
-            <!-- CONTROLES DE PUNTOS -->
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp">
 
-                <!-- LADO IZQUIERDO -->
+
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_weight="1"
@@ -329,7 +329,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- BOTONES INFERIORES -->
+
             <Button
                 android:id="@+id/btnRest"
                 android:text="1 MIN DESCANSO"
@@ -351,7 +351,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- PANTALLA MINUTO DE DESCANSO -->
+
     <LinearLayout
         android:id="@+id/layoutRest"
         android:visibility="gone"

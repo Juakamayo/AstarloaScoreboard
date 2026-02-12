@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <!-- IZQUIERDA -->
+
         <FrameLayout
             android:id="@+id/layoutLeft"
             android:layout_width="0dp"
@@ -59,13 +59,13 @@
 
         </FrameLayout>
 
-        <!-- SEPARADOR CENTRAL -->
+
         <View
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:background="@android:color/white" />
 
-        <!-- DERECHA -->
+
         <FrameLayout
             android:id="@+id/layoutRight"
             android:layout_width="0dp"
@@ -116,7 +116,6 @@
 
     </LinearLayout>
 
-    <!-- PANEL CENTRAL CON TIMER Y RONDA -->
     <LinearLayout
         android:orientation="vertical"
         android:gravity="center"
@@ -154,7 +153,7 @@
 
     </LinearLayout>
 
-    <!-- LUZ DE PRIORIDAD (CIRCULAR) -->
+
     <FrameLayout
         android:id="@+id/priorityLight"
         android:layout_width="120dp"
@@ -171,7 +170,7 @@
 
     </FrameLayout>
 
-    <!-- IP EN LA PARTE SUPERIOR -->
+
     <TextView
         android:id="@+id/txtIp"
         android:layout_width="wrap_content"
@@ -187,7 +186,7 @@
         android:clickable="true"
         android:focusable="true"/>
 
-    <!-- OVERLAY DESCANSO -->
+
     <include layout="@layout/overlay_rest"/>
 
 </FrameLayout>

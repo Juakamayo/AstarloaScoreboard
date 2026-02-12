@@ -37,15 +37,14 @@ class MarcadorActivity : AppCompatActivity() {
     private var isClientConnected = false
 
     private fun flashBackground(view: View, originalColorRes: Int, flashColorRes: Int) {
-        // Obtenemos el fondo (que es un Shape/GradientDrawable)
+
         val bgDrawable = view.background as? GradientDrawable ?: return
 
         val colorOriginal = getColor(originalColorRes)
         val colorFlash = getColor(flashColorRes)
 
-        // Animación: Original -> Flash -> Original
         val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), colorOriginal, colorFlash, colorOriginal)
-        colorAnimation.duration = 700 // Duración en milisegundos (rápido)
+        colorAnimation.duration = 700 //(ms)
 
         colorAnimation.addUpdateListener { animator ->
             bgDrawable.setColor(animator.animatedValue as Int)
@@ -80,7 +79,7 @@ class MarcadorActivity : AppCompatActivity() {
 
         stateManager = MatchStateManager(this)
 
-        // Cargar estado guardado
+
         currentState = stateManager.loadState()
         updateUI(currentState)
 
@@ -90,7 +89,7 @@ class MarcadorActivity : AppCompatActivity() {
         server = TcpServer { newState ->
             runOnUiThread {
                 // DETECTAR SUBIDA DE PUNTOS
-                // Si el nuevo puntaje es mayor al actual, lanzar flash
+                // Si el nuevo puntaje es mayor al actual, lanzar flash (quitar?)
                 if (newState.leftScore > currentState.leftScore) {
                     flashBackground(layoutLeft, R.color.surface_2, R.color.flash_red)
                 }
@@ -98,14 +97,14 @@ class MarcadorActivity : AppCompatActivity() {
                     flashBackground(layoutRight, R.color.surface_1, R.color.flash_green)
                 }
 
-                // Actualizar estado normalmente
+                // Actualizar estado
                 currentState = newState
                 updateUI(newState)
                 stateManager.saveState(newState)
             }
         }
 
-        // Configurar callbacks del servidor
+
         server.onClientConnected = {
             runOnUiThread {
                 isClientConnected = true

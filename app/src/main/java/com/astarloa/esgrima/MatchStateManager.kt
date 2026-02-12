@@ -58,7 +58,7 @@ class MatchStateManager(context: Context) {
         }
 
         val timePassed = System.currentTimeMillis() - lastDisconnect
-        return timePassed < 7000 // Menos de 7 segundos
+        return timePassed < 7000 // Menos de 7 segundos (ms)
     }
 
     fun clearDisconnectTime() {

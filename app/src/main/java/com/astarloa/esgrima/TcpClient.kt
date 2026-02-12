@@ -19,7 +19,7 @@ class TcpClient {
     var onDisconnected: (() -> Unit)? = null
 
     fun connect(ip: String) {
-        // Cerrar conexión anterior si existe
+
         disconnect()
 
         thread {
@@ -48,7 +48,7 @@ class TcpClient {
                         while (running && socket?.isConnected == true) {
                             val msg = queue.take()
                             writer?.println(msg)
-                            writer?.flush()  // Forzar envío inmediato
+                            writer?.flush() //forzar
                         }
                     } catch (e: Exception) {
                         Log.e("TcpClient", "Error enviando mensaje: ${e.message}")

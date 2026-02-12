@@ -32,12 +32,12 @@ class TcpServer(private val onStateReceived: (MatchState) -> Unit) {
                         try {
                             clientSocket?.close()
                         } catch (e: Exception) {
-                            // Ignorar errores al cerrar
+                            // Ignorar errores al cerrar (sino crashea :((( )
                         }
 
                         // Esperar nueva conexión
                         clientSocket = serverSocket?.accept()
-                        clientSocket?.soTimeout = 30000  // Timeout de 30 segundos
+                        clientSocket?.soTimeout = 30000  // Timeout de 30 segundos (ms)
 
                         Log.d("TcpServer", "Cliente conectado: ${clientSocket?.inetAddress?.hostAddress}")
                         onClientConnected?.invoke()

@@ -45,15 +45,15 @@ class MarcadorFloreteActivity : AppCompatActivity() {
     private var priorityLightReady = false
 
     private fun flashBackground(view: View, originalColorRes: Int, flashColorRes: Int) {
-        // Obtenemos el fondo (que es un Shape/GradientDrawable)
+
         val bgDrawable = view.background as? GradientDrawable ?: return
 
         val colorOriginal = getColor(originalColorRes)
         val colorFlash = getColor(flashColorRes)
 
-        // Animación: Original -> Flash -> Original
+        // Animación: Original, Flash, Original
         val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), colorOriginal, colorFlash, colorOriginal)
-        colorAnimation.duration = 700 // Duración en milisegundos (rápido)
+        colorAnimation.duration = 700 //(ms)
 
         colorAnimation.addUpdateListener { animator ->
             bgDrawable.setColor(animator.animatedValue as Int)
@@ -88,7 +88,7 @@ class MarcadorFloreteActivity : AppCompatActivity() {
         restPausedText = findViewById(R.id.restPausedText)
         txtIp = findViewById(R.id.txtIp)
 
-        // Esperar a que el layout esté listo para animaciones
+        // Esperar a que el layout esté listo
         priorityLight.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 priorityLight.viewTreeObserver.removeOnGlobalLayoutListener(this)
@@ -120,7 +120,7 @@ class MarcadorFloreteActivity : AppCompatActivity() {
                     flashBackground(layoutRight, R.color.surface_1, R.color.flash_green)
                 }
 
-                // Actualizar estado normalmente
+                // Actualizar estado
                 currentState = newState
                 updateUI(newState)
                 stateManager.saveState(newState)
@@ -161,7 +161,7 @@ class MarcadorFloreteActivity : AppCompatActivity() {
         cardRightYellow.visibility = if (state.rightYellow) View.VISIBLE else View.GONE
         cardRightRed.visibility = if (state.rightRed) View.VISIBLE else View.GONE
 
-        // Timer del combate - SIEMPRE mostrar el valor del estado
+
         timerText.text = formatTime(state.timerSeconds)
 
         // Ronda
@@ -170,7 +170,7 @@ class MarcadorFloreteActivity : AppCompatActivity() {
         // Prioridad
         updatePriorityUI(state)
 
-        // Descanso
+        // Descanso (minute)
         if (state.restActive) {
             restOverlay.visibility = View.VISIBLE
             restTimerText.text = formatTime(state.restSecondsRemaining)

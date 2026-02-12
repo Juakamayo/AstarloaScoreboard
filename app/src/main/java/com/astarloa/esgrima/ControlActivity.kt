@@ -43,41 +43,41 @@ class ControlActivity : AppCompatActivity() {
 
         stateManager = MatchStateManager(this)
 
-        // Cargar estado guardado
+
         state = stateManager.loadState()
         updateScoreText()
         updateCardButtons()
 
-        // Cargar última IP usada
+
         val lastIp = stateManager.getLastIp()
         if (lastIp.isNotEmpty()) {
             editIp.setText(lastIp)
 
-            // Verificar si debe reconectar automáticamente
+
             if (stateManager.shouldAutoReconnect()) {
-                // Han pasado menos de 7 segundos, reconectar automáticamente
+
                 btnConnect.postDelayed({
                     Toast.makeText(this, "Reconectando automáticamente...", Toast.LENGTH_SHORT).show()
                     btnConnect.isEnabled = false
                     btnConnect.text = "RECONECTANDO..."
                     client.connect(lastIp)
-                }, 500) // Pequeño delay para que se vea la UI primero
+                }, 500)
             }
         }
 
-        // Configurar callbacks del cliente
+
         client.onConnectionResult = { success, message ->
             runOnUiThread {
                 if (success) {
                     connected = true
-                    stateManager.clearDisconnectTime()  // Limpiar tiempo de desconexión
+                    stateManager.clearDisconnectTime()
                     editIp.isEnabled = false
                     btnConnect.isEnabled = false
                     btnConnect.visibility = View.GONE
                     btnDisconnect.visibility = View.VISIBLE
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
-                    // Enviar estado actual al marcador al conectarse
+
                     client.sendState(state)
                 } else {
                     connected = false
@@ -91,7 +91,7 @@ class ControlActivity : AppCompatActivity() {
         client.onDisconnected = {
             runOnUiThread {
                 connected = false
-                stateManager.saveDisconnectTime()  // Guardar tiempo de desconexión
+                stateManager.saveDisconnectTime()
                 editIp.isEnabled = true
                 btnConnect.isEnabled = true
                 btnConnect.text = "CONECTAR"
@@ -112,7 +112,7 @@ class ControlActivity : AppCompatActivity() {
             btnConnect.text = "CONECTANDO..."
             Toast.makeText(this, "Conectando...", Toast.LENGTH_SHORT).show()
 
-            // Guardar IP para la próxima vez
+
             stateManager.saveLastIp(ip)
 
             client.connect(ip)
@@ -128,7 +128,7 @@ class ControlActivity : AppCompatActivity() {
 
         updateScoreText()
 
-        // 🔥 RECONEXIÓN AUTOMÁTICA
+
         checkAutoReconnect()
     }
 
@@ -295,7 +295,7 @@ class ControlActivity : AppCompatActivity() {
 
     private fun updateAndSend() {
         updateScoreText()
-        stateManager.saveState(state)  // Guardar estado localmente
+        stateManager.saveState(state)
         client.sendState(state)
     }
 
@@ -315,14 +315,14 @@ class ControlActivity : AppCompatActivity() {
     }
 
     private fun checkAutoReconnect() {
-        // Verificar si debe reconectarse automáticamente
+
         if (stateManager.shouldAutoReconnect()) {
             val lastIp = stateManager.getLastIp()
             if (lastIp.isNotEmpty()) {
-                // Mostrar mensaje de reconexión automática
+
                 Toast.makeText(this, "Reconectando automáticamente...", Toast.LENGTH_SHORT).show()
 
-                // Esperar un momento antes de reconectar
+
                 btnConnect.postDelayed({
                     btnConnect.isEnabled = false
                     btnConnect.text = "RECONECTANDO..."

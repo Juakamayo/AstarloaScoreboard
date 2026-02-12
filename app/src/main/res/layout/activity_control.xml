@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- ===================== PANTALLA NORMAL ===================== -->
+
     <LinearLayout
         android:id="@+id/layoutNormal"
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- CONEXION EN LA PARTE SUPERIOR -->
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -53,7 +53,7 @@
                 android:textSize="24sp"/>
         </LinearLayout>
 
-        <!-- CONTENEDOR CENTRADO PARA EL RESTO -->
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical">
 
-                <!-- MARCADOR ACTUAL -->
+
                 <TextView
                     android:id="@+id/txtScore"
                     android:text="00 - 00"
@@ -79,14 +79,14 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="monospace"/>
 
-                <!-- CONTROLES -->
+
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp">
 
-                    <!-- LADO IZQUIERDO -->
+
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_weight="1"
@@ -136,7 +136,7 @@
                         android:layout_width="16dp"
                         android:layout_height="wrap_content"/>
 
-                    <!-- LADO DERECHO -->
+
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_weight="1"
@@ -182,7 +182,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- BOTONES INFERIORES -->
+
                 <Button
                     android:id="@+id/btnRest"
                     android:text="1 MIN"
@@ -205,7 +205,7 @@
 
     </LinearLayout>
 
-    <!-- ===================== PANTALLA MINUTO ===================== -->
+
     <LinearLayout
         android:id="@+id/layoutRest"
         android:visibility="gone"
