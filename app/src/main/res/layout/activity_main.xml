@@ -150,6 +150,25 @@
         android:padding="12dp"
         app:tint="#80FFFFFF" />
 
+    <!-- Botón Tutorial (al lado del About) -->
+    <ImageButton
+        android:id="@+id/btnTutorial"
+        android:layout_width="48dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="70dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_tutorial"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Tutorial"
+        android:layout_marginBottom="64dp"
+        android:padding="12dp"
+        android:scaleType="fitCenter"
+        android:layout_marginStart="10dp"
+        app:tint="#80FFFFFF"/>
+
+
+
+
 </FrameLayout>
 
 

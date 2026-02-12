@@ -64,6 +64,11 @@ class MainActivity : AppCompatActivity() {
         btnAbout.setOnClickListener {
             showAboutDialog()
         }
+
+        val btnTutorial = findViewById<ImageButton>(R.id.btnTutorial)
+        btnTutorial.setOnClickListener {
+            showTutorialDialog()
+        }
     }
 
     private fun showAboutDialog() {
@@ -74,26 +79,28 @@ class MainActivity : AppCompatActivity() {
         }
 
         val message = """
-            <b>Versión Actual:</b> ${'$'}versionName<br>
+            <b>Versión Actual:</b> $versionName<br>
             <br>
-            <b>Última Novedad (v1.11.1):</b><br>
-            - Las tarjetas P ahora se limpian automáticamente del marcador al desactivar la función de pasividad.<br>
-            - Corrección: asegura consistencia entre configuración y estado del marcador.<br>
+            <b>VERSIÓN 2.0 </b><br>
             <br>
-            <b>Novedades anteriores (v1.11):</b><br>
-            - Los botones de tarjeta P se ocultan automáticamente cuando se desactiva la función de pasividad.<br>
-            - Interfaz más limpia y adaptable según la configuración activa.<br>
+            <b>Novedades v2.0:</b><br>
+            - Nuevo botón de <b>Tutorial</b> con guía completa de conexión<br>
+            - Tutorial explica 2 métodos: WiFi común y Hotspot (sin WiFi)<br>
+            - Interfaz mejorada y más profesional<br>
             <br>
-            <b>Novedades (v1.10):</b><br>
-            - Se agregó un sistema de configuración en Florete/Espada.<br>
-            - Nuevas tarjetas "P" (Pasividad/Penalización) diferenciadas con una letra P.<br>
-            - Opción para activar/desactivar tarjeta P automática por inactividad (1 minuto).<br>
-            - Opción para activar/desactivar sonidos del marcador.<br>
+            <b>Sistema de Tarjetas P (v1.10-1.11.1):</b><br>
+            - Tarjetas "P" (Pasividad/Penalización) con letra P diferenciada<br>
+            - Sistema de configuración para activar/desactivar funciones<br>
+            - Tarjeta P automática por inactividad (1 minuto configurable)<br>
+            - Botones P se ocultan automáticamente al desactivar función<br>
+            - Limpieza automática de tarjetas P al desactivar sistema<br>
+            - Control de sonidos del marcador<br>
             <br>
-            <b>Otras características:</b><br>
-            - El sistema detecta automáticamente 1 minuto sin interrupciones.<br>
-            - Alertas auditivas en el marcador de Florete/Espada.<br>
-            - Modo "Pantalla Encendida" en los Controles.<br>
+            <b>Características principales:</b><br>
+            - Detección automática de 1 minuto sin interrupciones<br>
+            - Alertas auditivas en el marcador de Florete/Espada<br>
+            - Modo "Pantalla Encendida" en los Controles<br>
+            - Soporte para Sable, Florete y Espada<br>
             <br>
             <b>Creado por:</b><br>
             Joaquin Pizarro (Sablista)<br>
@@ -110,5 +117,61 @@ class MainActivity : AppCompatActivity() {
 
         val msgView = dialog.findViewById<android.widget.TextView>(android.R.id.message)
         msgView?.movementMethod = android.text.method.LinkMovementMethod.getInstance()
+    }
+
+    private fun showTutorialDialog() {
+        val message = """
+            <b>Cómo Usar Astarloa Scoreboard</b><br>
+            <br>
+            Existen <b>2 formas</b> de conectar el Control con el Marcador:<br>
+            <br>
+            <b>━━━━━━━━━━━━━━━━━━━━━━━━━━━━</b><br>
+            <br>
+            <b>MÉTODO 1: WiFi Común</b><br>
+            <br>
+            <b>1.</b> Conecta <b>ambos dispositivos</b> a la <b>misma red WiFi</b><br>
+            <b>2.</b> En el dispositivo <b>Marcador</b>:<br>
+            &nbsp;&nbsp;&nbsp;• Abre la app y selecciona modo "Marcador"<br>
+            &nbsp;&nbsp;&nbsp;• Aparecerá la <b>dirección IP</b> en pantalla (ej: 192.168.1.50)<br>
+            <b>3.</b> En el dispositivo <b>Control</b>:<br>
+            &nbsp;&nbsp;&nbsp;• Abre la app y selecciona modo "Control"<br>
+            &nbsp;&nbsp;&nbsp;• Ingresa la <b>IP del Marcador</b><br>
+            &nbsp;&nbsp;&nbsp;• Presiona <b>"CONECTAR"</b><br>
+            <b>4.</b> ¡Listo! Ya puedes controlar el combate<br>
+            <br>
+            <b>━━━━━━━━━━━━━━━━━━━━━━━━━━━━</b><br>
+            <br>
+            <b>MÉTODO 2: Hotspot (Sin WiFi)</b><br>
+            <br>
+            <b>1.</b> En el dispositivo <b>Control</b>:<br>
+            &nbsp;&nbsp;&nbsp;• Activa el <b>"Punto de acceso WiFi"</b> o <b>"Compartir Internet"</b><br>
+            &nbsp;&nbsp;&nbsp;• Anota el <b>nombre de la red</b> y la <b>contraseña</b><br>
+            <b>2.</b> En el dispositivo <b>Marcador</b>:<br>
+            &nbsp;&nbsp;&nbsp;• Conéctate a la <b>red WiFi del Control</b><br>
+            &nbsp;&nbsp;&nbsp;• Abre la app y selecciona modo "Marcador"<br>
+            &nbsp;&nbsp;&nbsp;• Aparecerá la <b>dirección IP</b> en pantalla<br>
+            <b>3.</b> En el dispositivo <b>Control</b>:<br>
+            &nbsp;&nbsp;&nbsp;• Abre la app y selecciona modo "Control"<br>
+            &nbsp;&nbsp;&nbsp;• Ingresa la <b>IP del Marcador</b><br>
+            &nbsp;&nbsp;&nbsp;• Presiona <b>"CONECTAR"</b><br>
+            <b>4.</b> ¡Listo! Funciona sin WiFi externo<br>
+            <br>
+            <b>━━━━━━━━━━━━━━━━━━━━━━━━━━━━</b><br>
+            <br>
+            <b>Consejos:</b><br>
+            • La IP siempre se muestra en el <b>Marcador</b><br>
+            • Verifica que ambos dispositivos estén en la <b>misma red</b><br>
+            • Si no conecta, revisa el <b>firewall</b> o permisos de red<br>
+            • El Método 2 es ideal para entrenamientos sin WiFi disponible<br>
+            <br>
+            <b>¿Problemas?</b> Revisa la configuración de red de tus dispositivos.
+        """.trimIndent()
+
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        builder.setTitle("Tutorial de Conexión")
+        builder.setMessage(android.text.Html.fromHtml(message, android.text.Html.FROM_HTML_MODE_LEGACY))
+        builder.setPositiveButton("Entendido") { dialog, _ -> dialog.dismiss() }
+
+        builder.show()
     }
 }
