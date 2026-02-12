@@ -3,6 +3,7 @@ package com.astarloa.esgrima
 import android.app.AlertDialog
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -41,6 +42,7 @@ class ControlFloreteActivity : AppCompatActivity() {
     private lateinit var btnStartTimer: Button
     private lateinit var btnPauseTimer: Button
     private lateinit var btnPriority: Button
+    private lateinit var btnSettings: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +52,6 @@ class ControlFloreteActivity : AppCompatActivity() {
 
         initializeViews()
         stateManager = MatchStateManager(this)
-
 
         state = stateManager.loadState()
         updateUI()
@@ -94,6 +95,7 @@ class ControlFloreteActivity : AppCompatActivity() {
         btnStartTimer = findViewById(R.id.btnStartTimer)
         btnPauseTimer = findViewById(R.id.btnPauseTimer)
         btnPriority = findViewById(R.id.btnPriority)
+        btnSettings = findViewById(R.id.btnSettings)
     }
 
     private fun setupClientCallbacks() {
@@ -147,6 +149,11 @@ class ControlFloreteActivity : AppCompatActivity() {
 
         btnDisconnect.setOnClickListener {
             client.disconnect()
+        }
+
+        // Botón de configuración
+        btnSettings.setOnClickListener {
+            showSettingsDialog()
         }
 
         // Timer
@@ -225,6 +232,28 @@ class ControlFloreteActivity : AppCompatActivity() {
         }
     }
 
+    private fun showSettingsDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_settings, null)
+        val checkPassivityCard = dialogView.findViewById<CheckBox>(R.id.checkPassivityCard)
+        val checkSounds = dialogView.findViewById<CheckBox>(R.id.checkSounds)
+
+        // Cargar configuración actual
+        checkPassivityCard.isChecked = state.passivityCardEnabled
+        checkSounds.isChecked = state.soundsEnabled
+
+        AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setPositiveButton("GUARDAR") { _, _ ->
+                state.passivityCardEnabled = checkPassivityCard.isChecked
+                state.soundsEnabled = checkSounds.isChecked
+
+                updateAndSend()
+                Toast.makeText(this, "Configuración guardada", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("CANCELAR", null)
+            .show()
+    }
+
     private fun setupScoreButtons() {
         findViewById<Button>(R.id.btnLeftPlus).setOnClickListener {
             ifCheckConnection { if (state.leftScore < 99) state.leftScore++; updateAndSend() }
@@ -245,6 +274,12 @@ class ControlFloreteActivity : AppCompatActivity() {
         val btnRightYellow = findViewById<Button>(R.id.btnRightYellow)
         val btnLeftRed = findViewById<Button>(R.id.btnLeftRed)
         val btnRightRed = findViewById<Button>(R.id.btnRightRed)
+
+        // Nuevos botones para tarjetas P
+        val btnLeftYellowP = findViewById<Button>(R.id.btnLeftYellowP)
+        val btnRightYellowP = findViewById<Button>(R.id.btnRightYellowP)
+        val btnLeftRedP = findViewById<Button>(R.id.btnLeftRedP)
+        val btnRightRedP = findViewById<Button>(R.id.btnRightRedP)
 
         btnLeftYellow.setOnClickListener {
             ifCheckConnection {
@@ -281,6 +316,44 @@ class ControlFloreteActivity : AppCompatActivity() {
                 updateAndSend()
             }
         }
+
+        // Tarjetas P - Amarilla
+        btnLeftYellowP.setOnClickListener {
+            ifCheckConnection {
+                state.leftYellowP = !state.leftYellowP
+                btnLeftYellowP.alpha = if (state.leftYellowP) 1f else 0.4f
+                updateAndSend()
+            }
+        }
+
+        btnRightYellowP.setOnClickListener {
+            ifCheckConnection {
+                state.rightYellowP = !state.rightYellowP
+                btnRightYellowP.alpha = if (state.rightYellowP) 1f else 0.4f
+                updateAndSend()
+            }
+        }
+
+        // Tarjetas P - Roja
+        btnLeftRedP.setOnClickListener {
+            ifCheckConnection {
+                state.leftRedP = !state.leftRedP
+                btnLeftRedP.alpha = if (state.leftRedP) 1f else 0.4f
+                if (state.leftRedP && state.rightScore < 99) state.rightScore++
+                if (!state.leftRedP && state.rightScore > 0) state.rightScore--
+                updateAndSend()
+            }
+        }
+
+        btnRightRedP.setOnClickListener {
+            ifCheckConnection {
+                state.rightRedP = !state.rightRedP
+                btnRightRedP.alpha = if (state.rightRedP) 1f else 0.4f
+                if (state.rightRedP && state.leftScore < 99) state.leftScore++
+                if (!state.rightRedP && state.leftScore > 0) state.leftScore--
+                updateAndSend()
+            }
+        }
     }
 
     private fun setupRestButtons() {
@@ -297,14 +370,12 @@ class ControlFloreteActivity : AppCompatActivity() {
     }
 
     private fun setTimerSeconds(seconds: Int) {
-
         combatTimer?.cancel()
 
         state.timerSeconds = seconds
         state.timerRunning = false
         state.timerPaused = false
         remainingCombatMs = (seconds * 1000).toLong()
-
 
         btnStartTimer.visibility = View.VISIBLE
         btnPauseTimer.visibility = View.GONE
@@ -327,7 +398,9 @@ class ControlFloreteActivity : AppCompatActivity() {
                 state.timerSeconds = (ms / 1000).toInt()
 
                 continuousSeconds++
-                if (continuousSeconds >= 60) {
+
+                // Solo aplicar tarjeta P si está habilitada la configuración
+                if (state.passivityCardEnabled && continuousSeconds >= 60) {
                     pauseCombatTimer()
 
                     // Mandar señal de sonido y alerta
@@ -476,6 +549,10 @@ class ControlFloreteActivity : AppCompatActivity() {
         state.rightYellow = false
         state.leftRed = false
         state.rightRed = false
+        state.leftYellowP = false
+        state.rightYellowP = false
+        state.leftRedP = false
+        state.rightRedP = false
         state.timerSeconds = 180
         state.timerRunning = false
         state.timerPaused = false
@@ -504,6 +581,11 @@ class ControlFloreteActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnRightYellow).alpha = if (state.rightYellow) 1f else 0.4f
         findViewById<Button>(R.id.btnLeftRed).alpha = if (state.leftRed) 1f else 0.4f
         findViewById<Button>(R.id.btnRightRed).alpha = if (state.rightRed) 1f else 0.4f
+
+        findViewById<Button>(R.id.btnLeftYellowP).alpha = if (state.leftYellowP) 1f else 0.4f
+        findViewById<Button>(R.id.btnRightYellowP).alpha = if (state.rightYellowP) 1f else 0.4f
+        findViewById<Button>(R.id.btnLeftRedP).alpha = if (state.leftRedP) 1f else 0.4f
+        findViewById<Button>(R.id.btnRightRedP).alpha = if (state.rightRedP) 1f else 0.4f
     }
 
     private fun updateAndSend() {

@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.ImageButton // Importante importar esto
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
@@ -76,11 +76,16 @@ class MainActivity : AppCompatActivity() {
         val message = """
             <b>Versión Actual:</b> $versionName<br>
             <br>
-            <b>Última Novedad:</b><br>
-            - El sistema ahora detecta automáticamente si transcurre 1 minuto sin interrupciones.<br>
-            - Al cumplirse el minuto, el tiempo se pausa solo y el marcador emite un aviso sonoro específico para alertar al árbitro.<br>
-            - Se han añadido alertas auditivas en el marcador de Florete/Espada.<br>
-            - Se ha forzado el modo "Pantalla Encendida" en los Controles (Sable y Florete).<br>
+            <b>Última Novedad (v1.10):</b><br>
+            - Se agregó un sistema de configuración en Florete/Espada.<br>
+            - Nuevas tarjetas "P" (Pasividad/Penalización) diferenciadas con una letra P.<br>
+            - Opción para activar/desactivar tarjeta P automática por inactividad (1 minuto).<br>
+            - Opción para activar/desactivar sonidos del marcador.<br>
+            <br>
+            <b>Novedades anteriores:</b><br>
+            - El sistema detecta automáticamente 1 minuto sin interrupciones.<br>
+            - Alertas auditivas en el marcador de Florete/Espada.<br>
+            - Modo "Pantalla Encendida" en los Controles.<br>
             <br>
             <b>Creado por:</b><br>
             Joaquin Pizarro (Sablista)<br>

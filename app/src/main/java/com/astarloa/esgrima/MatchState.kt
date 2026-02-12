@@ -21,5 +21,15 @@ data class MatchState(
     var currentRound: Int = 1,  // Ronda actual (1-3) (MAX 3) (cambiar de ser necesario?)
     var priorityActive: Boolean = false,  // Si hay prioridad asignada
     var priorityLeft: Boolean = false,  // true = izquierda, false = derecha
-    var soundCode: Int = 0 // 0: Silencio, 1: Fin de Tiempo, 2: Pasividad (1 min)
+    var soundCode: Int = 0, // 0: Silencio, 1: Fin de Tiempo, 2: Pasividad (1 min)
+
+    // Tarjetas P (Pasividad/Penalización)
+    var leftYellowP: Boolean = false,
+    var rightYellowP: Boolean = false,
+    var leftRedP: Boolean = false,
+    var rightRedP: Boolean = false,
+
+    // Configuraciones (solo para Florete/Espada)
+    var passivityCardEnabled: Boolean = true,  // Tarjeta P por inactividad
+    var soundsEnabled: Boolean = true  // Sonidos activados
 )

@@ -36,6 +36,12 @@ class MarcadorFloreteActivity : AppCompatActivity() {
     private lateinit var cardRightYellow: View
     private lateinit var cardRightRed: View
 
+    // Tarjetas P
+    private lateinit var cardLeftYellowPContainer: View
+    private lateinit var cardRightYellowPContainer: View
+    private lateinit var cardLeftRedPContainer: View
+    private lateinit var cardRightRedPContainer: View
+
     private lateinit var timerText: TextView
     private lateinit var roundText: TextView
     private lateinit var priorityLight: View
@@ -82,6 +88,12 @@ class MarcadorFloreteActivity : AppCompatActivity() {
         cardRightYellow = findViewById(R.id.cardRightYellow)
         cardRightRed = findViewById(R.id.cardRightRed)
 
+        // Tarjetas P
+        cardLeftYellowPContainer = findViewById(R.id.cardLeftYellowPContainer)
+        cardRightYellowPContainer = findViewById(R.id.cardRightYellowPContainer)
+        cardLeftRedPContainer = findViewById(R.id.cardLeftRedPContainer)
+        cardRightRedPContainer = findViewById(R.id.cardRightRedPContainer)
+
         timerText = findViewById(R.id.timerText)
         roundText = findViewById(R.id.roundText)
         priorityLight = findViewById(R.id.priorityLight)
@@ -123,7 +135,9 @@ class MarcadorFloreteActivity : AppCompatActivity() {
                 if (newState.rightScore > currentState.rightScore) {
                     flashBackground(layoutRight, R.color.surface_1, R.color.flash_green)
                 }
-                if (newState.soundCode != 0 && newState.soundCode != currentState.soundCode) {
+
+                // Solo reproducir sonidos si están habilitados en la configuración
+                if (newState.soundsEnabled && newState.soundCode != 0 && newState.soundCode != currentState.soundCode) {
                     when (newState.soundCode) {
                         1 -> toneGen.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 2000) // Fin: Largo (2s)
                         2 -> toneGen.startTone(ToneGenerator.TONE_SUP_BUSY, 1000) // Pasividad: Pitido repetido (1s)
@@ -166,11 +180,17 @@ class MarcadorFloreteActivity : AppCompatActivity() {
         scoreLeft.text = String.format("%02d", state.leftScore)
         scoreRight.text = String.format("%02d", state.rightScore)
 
+        // Tarjetas normales
         cardLeftYellow.visibility = if (state.leftYellow) View.VISIBLE else View.GONE
         cardLeftRed.visibility = if (state.leftRed) View.VISIBLE else View.GONE
         cardRightYellow.visibility = if (state.rightYellow) View.VISIBLE else View.GONE
         cardRightRed.visibility = if (state.rightRed) View.VISIBLE else View.GONE
 
+        // Tarjetas P
+        cardLeftYellowPContainer.visibility = if (state.leftYellowP) View.VISIBLE else View.GONE
+        cardRightYellowPContainer.visibility = if (state.rightYellowP) View.VISIBLE else View.GONE
+        cardLeftRedPContainer.visibility = if (state.leftRedP) View.VISIBLE else View.GONE
+        cardRightRedPContainer.visibility = if (state.rightRedP) View.VISIBLE else View.GONE
 
         timerText.text = formatTime(state.timerSeconds)
 
