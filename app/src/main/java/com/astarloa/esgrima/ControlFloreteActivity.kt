@@ -248,6 +248,11 @@ class ControlFloreteActivity : AppCompatActivity() {
                 state.passivityCardEnabled = checkPassivityCard.isChecked
                 state.soundsEnabled = checkSounds.isChecked
 
+                // Si se desactiva la función de pasividad, limpiar tarjetas P existentes
+                if (!state.passivityCardEnabled) {
+                    clearAllPCards()
+                }
+
                 // Mostrar u ocultar botones P según la configuración
                 updatePCardButtonsVisibility()
 
@@ -599,6 +604,17 @@ class ControlFloreteActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnRightYellowP).visibility = visibility
         findViewById<Button>(R.id.btnLeftRedP).visibility = visibility
         findViewById<Button>(R.id.btnRightRedP).visibility = visibility
+    }
+
+    private fun clearAllPCards() {
+        // Limpiar todas las tarjetas P del estado
+        state.leftYellowP = false
+        state.rightYellowP = false
+        state.leftRedP = false
+        state.rightRedP = false
+
+        // Actualizar la opacidad de los botones P
+        updateCardButtons()
     }
 
     private fun updateAndSend() {

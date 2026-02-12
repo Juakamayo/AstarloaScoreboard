@@ -76,12 +76,15 @@ class MainActivity : AppCompatActivity() {
         val message = """
             <b>Versión Actual:</b> ${'$'}versionName<br>
             <br>
-            <b>Última Novedad (v1.11):</b><br>
-            - Los botones de tarjeta P ahora se ocultan automáticamente cuando se desactiva la función de pasividad.<br>
-            - Interfaz más limpia y adaptable según la configuración activa.<br>
-            - Mejor aprovechamiento del espacio en pantalla.<br>
+            <b>Última Novedad (v1.11.1):</b><br>
+            - Las tarjetas P ahora se limpian automáticamente del marcador al desactivar la función de pasividad.<br>
+            - Corrección: asegura consistencia entre configuración y estado del marcador.<br>
             <br>
-            <b>Novedades anteriores (v1.10):</b><br>
+            <b>Novedades anteriores (v1.11):</b><br>
+            - Los botones de tarjeta P se ocultan automáticamente cuando se desactiva la función de pasividad.<br>
+            - Interfaz más limpia y adaptable según la configuración activa.<br>
+            <br>
+            <b>Novedades (v1.10):</b><br>
             - Se agregó un sistema de configuración en Florete/Espada.<br>
             - Nuevas tarjetas "P" (Pasividad/Penalización) diferenciadas con una letra P.<br>
             - Opción para activar/desactivar tarjeta P automática por inactividad (1 minuto).<br>
